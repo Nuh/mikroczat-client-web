@@ -1,0 +1,42 @@
+{
+  "name": "mikroczat-client-web",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "private": true,
+  "dependencies": {
+    "bufferutil": "^4.0.0",
+    "connected-react-router": "^4.3.0",
+    "crypto-js": "^3.1.9-1",
+    "eventemitter2": "^5.0.1",
+    "isomorphic-ws": "^4.0.1",
+    "localforage": "^1.7.2",
+    "lodash": "^4.17.10",
+    "normalize.css": "^8.0.0",
+    "primeicons": "^1.0.0-beta.10",
+    "primereact": "^2.0.0-beta.1",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-helmet": "^5.2.0",
+    "react-hot-loader": "^4.3.4",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.4",
+    "redux": "^4.0.0",
+    "redux-persist": "^5.10.0",
+    "redux-react-session": "^2.5.0",
+    "redux-thunk": "^2.3.0",
+    "scriptjs": "^2.5.8",
+    "uri-js": "^4.2.2",
+    "urijs": "^1.19.1",
+    "utf-8-validate": "^5.0.1",
+    "uuid": "^3.3.2",
+    "ws": "^6.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
