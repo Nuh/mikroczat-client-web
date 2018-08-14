@@ -1,0 +1,16 @@
+.authorization {
+    box-sizing: border-box;
+    padding: 0.15em 0.3em;
+    line-height: 0.9em;
+    background: #5a5b5c;
+    border: 1px solid #ffffff;
+    border-radius: 0.1em;
+}
+
+.authorization:hover, .authorization:focus, .authorization:active {
+    opacity: 0.8;
+}
+
+.authorization--text {
+    font-size: 0.6em;
+}

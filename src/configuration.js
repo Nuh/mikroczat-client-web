@@ -1,7 +1,8 @@
 import * as flattenDeep from 'lodash/flattenDeep';
 import * as merge from 'lodash/merge';
+import * as defaultConfiguration from './configuration.json';
 
-export const configuration = {_loaded: false};
+export const configuration = merge(defaultConfiguration, {_loaded: false});
 
 export const load = async (urls) => {
     let _urls = flattenDeep([urls]);
@@ -10,7 +11,7 @@ export const load = async (urls) => {
         try {
             merge(configuration, await (await fetch(url)).json());
         } catch (e) {
-            console.error('Error while loading configuration:', url, e)
+            console.error('Error while loading configuration:', url, '\n', e)
         }
     }
     configuration._loaded = true;

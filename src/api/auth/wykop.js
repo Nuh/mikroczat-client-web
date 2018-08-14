@@ -8,12 +8,7 @@ export const parseToken = (data) => {
         throw new Error('Bad syntax of token');
     }
 };
-
 export const fetchToken = async (data) => await validateToken(data) ? data : null;
-export const fetchProfile = async (data) => {
-    return {};
-};
-
 export const validateToken = async (data) => {
     try {
         let token = parseToken(data);

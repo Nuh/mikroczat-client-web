@@ -1,3 +1,4 @@
+import * as once from 'lodash/once';
 import {EventEmitter2} from 'eventemitter2';
 import * as WebSocket from 'isomorphic-ws';
 import uuid from 'uuid';
@@ -28,9 +29,10 @@ export default class Client extends EventEmitter2 {
         });
         this._socket = null;
         this._messages = {};
+        this.latency = null;
     }
 
-    connect(server, params) {
+    async connect(server, params) {
         let handlerMessages = (socket) => (str) => {
             if (str && str instanceof Object && str.data) {
                 str = str.data;
@@ -44,44 +46,56 @@ export default class Client extends EventEmitter2 {
                     let message = this._messages[data.id];
                     message._reply(data);
                 } else {
-                    this.emit('action', data);
+                    this.emit('action', data, this, socket);
                 }
             } catch (e) {
                 console.error('Failed parse message:', str, e);
             }
-        }, handlerClose = (socket) => () => {
-            if (this._socket === socket) {
-                this._socket = null;
-                this.emit('close', this);
+        }, handleError = (socket) => once(async (e) => {
+            this.emit('error', e, this, socket);
+            await this.disconnect();
+        }), handlerClose = (socket) => once((e) => {
+            if (this._pingInterval) {
+                clearInterval(this._pingInterval);
             }
-        }, handlerOpen = (socket) => () => {
+            socket.onclose = null;
+            socket.onerror = null;
+            socket.onmessage = null;
+            this.emit('close', this, socket, e);
+        }), handlerOpen = (socket) => once((e) => {
             socket.onopen = null;
             socket.onclose = handlerClose(socket);
+            socket.onerror = handleError(socket);
             socket.onmessage = handlerMessages(socket);
-            this.emit('open', this);
-        };
+            this.emit('open', this, socket, e);
+            if (!this._pingInterval) {
+                this._pingInterval = setInterval(() => {
+                    let message = this.send('ping', null, () => {
+                        let evaluateTime = message.response.created - message.message.received;
+                        this.latency = Math.round(((message.response.received - message.sent) - evaluateTime)/2.0);
+                        this.emit('ping', this.latency, this, socket);
+                    })
+                }, 15000);
+            }
+        });
         if (!this._socket || this.getStatus() >= 2) {
-            this.disconnect();
             let url = getUrl(server, params);
             if (url) {
                 this._socket = new WebSocket(url);
+                this._socket.onerror = handleError(this._socket);
                 this._socket.onopen = handlerOpen(this._socket);
             }
         }
+        return this;
     };
 
-    disconnect(reason) {
-        if (!this._socket) {
-            return;
-        }
-        if (this.getStatus() < 2) {
-            this._socket.close(4000, reason);
-        } else {
-            if (this.getStatus() === 2) {
-                this._socket.terminate();
-            }
+    async disconnect() {
+        if (this._socket) {
+            let socket = this._socket;
             this._socket = null;
+            socket.close();
         }
+        return this;
     };
 
     getStatus() {
@@ -111,7 +125,8 @@ class ClientMessage {
             id: uuid.v4(),
             type: type,
             data: data,
-            created: (new Date()).getTime()
+            created: (new Date()).getTime(),
+            received: null
         };
         this.response = null;
         this.status = ClientMessageStatus.PENDING;
@@ -126,15 +141,17 @@ class ClientMessage {
                 this.sent = (new Date()).getTime();
             }
         };
-        if (!this.status || this.status === ClientMessageStatus.PENDING) {
-            this.status = ClientMessageStatus.SENDING;
-            if (this._client.getStatus() === 1) {
-                _realSend();
-            } else {
-                this.status = ClientMessageStatus.QUEUED;
-                this._client.once('open', () => _realSend());
+        setTimeout(() => {
+            if (!this.status || this.status === ClientMessageStatus.PENDING) {
+                this.status = ClientMessageStatus.SENDING;
+                if (this._client.getStatus() === 1) {
+                    _realSend();
+                } else {
+                    this.status = ClientMessageStatus.QUEUED;
+                    this._client.once('open', () => _realSend());
+                }
             }
-        }
+        }, 0);
         return this;
     }
 
@@ -153,6 +170,7 @@ class ClientMessage {
                     created: response.created || (new Date()).getTime(),
                     received: (new Date()).getTime()
                 };
+                this.message.received = response.request.created;
                 let callback = this._callback;
                 if (callback instanceof Function) {
                     delete this._callback;

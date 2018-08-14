@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader'
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react'
+import {ConnectedRouter} from 'connected-react-router'
 import App from './application';
 import store, {history, storage} from './store';
 import {load as loadConfiguration} from './configuration';
@@ -15,7 +16,9 @@ const render = async () => {
         <AppContainer>
             <Provider store={store}>
                 <PersistGate loading={null} persistor={storage}>
-                    <App history={history} store={store}/>
+                    <ConnectedRouter history={history}>
+                        <App store={store}/>
+                    </ConnectedRouter>
                 </PersistGate>
             </Provider>
         </AppContainer>

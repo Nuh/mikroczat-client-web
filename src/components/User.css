@@ -1,0 +1,20 @@
+.user {
+    width: 100%;
+    padding: 4px 6px;
+    overflow: hidden;
+}
+
+.user--avatar {
+    margin: 0 2px;
+    float: left;
+    width: 32px;
+    height: 32px;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+.user--login {
+    float: left;
+    margin-left: 5px;
+    line-height: 32px;
+}

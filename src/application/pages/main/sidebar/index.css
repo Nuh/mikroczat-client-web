@@ -1,0 +1,55 @@
+.sidebar, .sidebar .ui-tabview .ui-tabview-panel,
+.sidebar .ui-widget.ui-scrollpanel {
+    height: 100%;
+    width: 100%;
+}
+
+.sidebar {
+    background: #3e3e3e;
+    border-left: 2px solid #333333;
+}
+
+.sidebar .ui-scrollpanel-content {
+    padding-bottom: 18px;
+    padding-right: 18px;
+}
+
+.sidebar, .sidebar .ui-tabview .ui-tabview-panel {
+    display: flex;
+}
+
+.sidebar .ui-tabview {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav {
+    display: flex;
+}
+
+.sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav > * {
+    flex-grow: 1;
+}
+
+.sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav a {
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+}
+
+.sidebar .ui-tabview .ui-tabview-panels {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.sidebar .ui-tabview .ui-tabview-panel {
+    padding: 0;
+}
+
+.sidebar .ui-tabview .ui-tabview-panel.ui-helper-hidden {
+    display: none;
+}

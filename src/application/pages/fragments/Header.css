@@ -1,0 +1,45 @@
+header {
+    box-sizing: border-box;
+    width: 100%;
+    flex-grow: 0;
+    height: 2em;
+    max-height: 2em;
+    line-height: 2em;
+    padding: 0 1em;
+    border: 0 solid #39393a;
+    border-bottom-width: 0.1em;
+    background: #333333;
+    font-weight: bolder;
+    font-size: 1.5em;
+    user-select: none
+    /*transition: top 0.3s;*/
+}
+
+header a, header a:visited {
+    color: inherit;
+    font-style: normal;
+    text-decoration: none;
+}
+
+header a:hover, header a:active, header a:focus {
+    opacity: 0.90;
+}
+
+.tray {
+    float: right;
+    height: 100%;
+    width: auto;
+    white-space: nowrap;
+    display: flex;
+    font-size: 0.8em;
+    justify-content: space-around;
+    flex-direction: row-reverse;
+}
+
+.tray > * {
+    margin: auto 0 auto 0.75em;
+}
+
+.blocked {
+    pointer-events: none;
+}

@@ -1,0 +1,43 @@
+footer {
+    box-sizing: border-box;
+    width: 100%;
+    flex-grow: 0;
+    height: 2em;
+    max-height: 2em;
+    line-height: 1.9em;
+    padding: 0 3em;
+    border: 0 solid #39393a;
+    border-top-width: 0.1em;
+    background: #333333;
+    text-align: right;
+    font-size: 0.7em;
+    user-select: none
+}
+
+footer a, footer a:visited {
+    color: inherit;
+    font-style: normal;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+footer a:hover, footer a:active, footer a:focus {
+    opacity: 0.50;
+}
+
+footer > * {
+    opacity: 0.35;
+}
+
+footer > a {
+    opacity: 0.80;
+}
+
+footer .version {
+    float: right;
+    width: auto;
+    margin-left: 0.75em;
+    padding-left: 0.75em;
+    white-space: nowrap;
+    border-left: 1px solid #39393a;
+}

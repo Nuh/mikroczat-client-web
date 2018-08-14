@@ -10,7 +10,6 @@ export const login = async (strategy, data) => {
         return {
             strategy,
             token: await module.fetchToken(data),
-            profile: await module.fetchProfile(data)
         }
     }
 };

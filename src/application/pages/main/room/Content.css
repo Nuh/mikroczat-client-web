@@ -1,0 +1,68 @@
+.room-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.room-content > * {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.5em;
+}
+
+.room-content--title {
+    width: 100%;
+    margin-bottom: 4px;
+    background: #333333;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+.room-content--messages {
+    flex-grow: 1;
+}
+
+.room-content--input {
+    position: relative;
+    width: 100%;
+}
+
+.room-content--input input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 24px;
+    border: 1px solid #b0b0b0;
+    border-width: 1px 30px;
+    border-radius: 4px;
+    padding: 0.9em 0.4em;
+    outline: none;
+}
+
+.room-content--input-options, .room-content--input-options--left, .room-content--input-options--right {
+    position: absolute;
+    top: 0;
+    display: block;
+    line-height: 30px;
+    margin: 0.4em 0.8em;
+    color: #eee;
+}
+
+.room-content--input-options, .room-content--input-options--left {
+    left: 0;
+}
+
+.room-content--input-options--right {
+    right: 0;
+}
+
+.room-content--input-options > :hover, .room-content--input-options--left > :hover, .room-content--input-options--right > :hover {
+    color: #333;
+}
+
+.room-content--input-options button, .room-content--input-options--left button, .room-content--input-options--right button {
+    background: transparent;
+    color: inherit;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
