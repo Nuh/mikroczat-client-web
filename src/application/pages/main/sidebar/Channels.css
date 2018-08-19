@@ -1,0 +1,57 @@
+.channels {
+    width: 100%;
+    height: 100%;
+}
+
+.channels > * {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.5em;
+}
+
+.channels--input {
+    position: relative;
+    width: 100%;
+}
+
+.channels--input input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 24px;
+    border: 1px solid #b0b0b0;
+    border-width: 1px 30px 1px 1px;
+    border-radius: 4px;
+    padding: 1em 0.5em;
+    outline: none;
+    font-size: 0.9em;
+}
+
+.channels--input-options, .channels--input-options--left, .channels--input-options--right {
+    position: absolute;
+    top: 0;
+    display: block;
+    line-height: 30px;
+    margin: 0.4em 0.8em;
+    color: #eee;
+}
+
+.channels--input-options, .channels--input-options--left {
+    left: 0;
+}
+
+.channels--input-options--right {
+    right: 0;
+}
+
+.channels--input-options > :hover, .channels--input-options--left > :hover, .channels--input-options--right > :hover {
+    color: #333;
+}
+
+.channels--input-options button, .channels--input-options--left button, .channels--input-options--right button {
+    background: transparent;
+    color: inherit;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}

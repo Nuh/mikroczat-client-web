@@ -1,6 +1,8 @@
 body, #root, .application-container {
     width: 100%;
+    width: 100vw;
     height: 100%;
+    height: 100vh;
     margin: 0;
     padding: 0;
     border: 0;
@@ -43,22 +45,17 @@ a:hover, a:focus, a:active {
 .Resizer {
     background: #000;
     opacity: .2;
-    z-index: 1;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding;
     background-clip: padding-box;
+    z-index: 1;
 }
 
 .Resizer:hover {
-    -webkit-transition: all 2s ease;
-    transition: all 2s ease;
+    transition: all 1s ease;
 }
 
 .Resizer.vertical {
-    width: 11px;
+    width: 10px;
     margin: 0 -5px;
     border-left: 5px solid rgba(255, 255, 255, 0);
     border-right: 5px solid rgba(255, 255, 255, 0);
@@ -68,10 +65,4 @@ a:hover, a:focus, a:active {
 .Resizer.vertical:hover {
     border-left: 5px solid rgba(0, 0, 0, 0.5);
     border-right: 5px solid rgba(0, 0, 0, 0.5);
-}
-.Resizer.disabled {
-    cursor: not-allowed;
-}
-.Resizer.disabled:hover {
-    border-color: transparent;
 }

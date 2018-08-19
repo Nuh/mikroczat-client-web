@@ -55,8 +55,8 @@ export default class Client extends EventEmitter2 {
             this.emit('error', e, this, socket);
             await this.disconnect();
         }), handlerClose = (socket) => once((e) => {
-            if (this._pingInterval) {
-                clearInterval(this._pingInterval);
+            if (this._intervalPing) {
+                this._intervalPing = clearInterval(this._intervalPing);
             }
             socket.onclose = null;
             socket.onerror = null;
@@ -68,11 +68,11 @@ export default class Client extends EventEmitter2 {
             socket.onerror = handleError(socket);
             socket.onmessage = handlerMessages(socket);
             this.emit('open', this, socket, e);
-            if (!this._pingInterval) {
-                this._pingInterval = setInterval(() => {
+            if (!this._intervalPing) {
+                this._intervalPing = setInterval(() => {
                     let message = this.send('ping', null, () => {
                         let evaluateTime = message.response.created - message.message.received;
-                        this.latency = Math.round(((message.response.received - message.sent) - evaluateTime)/2.0);
+                        this.latency = Math.round(((message.response.received - message.sent) - evaluateTime) / 2.0);
                         this.emit('ping', this.latency, this, socket);
                     })
                 }, 15000);

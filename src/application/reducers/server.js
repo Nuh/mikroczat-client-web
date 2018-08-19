@@ -1,5 +1,5 @@
 import * as assignIn from 'lodash/assignIn';
-import {SESSION_OPENED, SESSION_CHANGED_STATE, getActionType} from '../actions/client';
+import {SESSION_OPENED, SESSION_CHANGED_STATE, getResponseType} from '../actions/client';
 
 export default (state = {}, data) => {
     switch (data.type) {
@@ -10,10 +10,10 @@ export default (state = {}, data) => {
         case SESSION_CHANGED_STATE:
             return state = assignIn(state, {state: data.client.getStatus()});
 
-        case getActionType('ping'):
+        case getResponseType('ping'):
             return state = assignIn(state, {latency: data.data});
 
-        case getActionType('version'):
+        case getResponseType('version'):
             return state = assignIn(state, data.data);
 
         default:

@@ -5,13 +5,24 @@
 }
 
 .sidebar {
-    background: #3e3e3e;
-    border-left: 2px solid #333333;
+    background: #444444;
+    border-left: 2px solid #39393a;
 }
 
 .sidebar .ui-scrollpanel-content {
     padding-bottom: 18px;
     padding-right: 18px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sidebar .ui-scrollpanel-content a {
+    text-decoration: none;
+}
+
+.sidebar .ui-scrollpanel-content a:hover,
+.sidebar .ui-scrollpanel-content a:focus,
+.sidebar .ui-scrollpanel-content a:active {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .sidebar, .sidebar .ui-tabview .ui-tabview-panel {
@@ -28,6 +39,8 @@
 
 .sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav {
     display: flex;
+    background: #39393a;
+    border-bottom: 2px solid #333333;
 }
 
 .sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav > * {
@@ -37,13 +50,29 @@
 .sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav a {
     box-sizing: border-box;
     width: 100%;
+    height: 110%;
+    border: 1px solid transparent;
     text-align: center;
+}
+
+.sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav li.ui-state-active a {
+    border: 1px solid #333;
+    border-bottom-width: 0;
+    border-radius: 12px 12px 0 0;
+    background: #444444;
+}
+
+.sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav li.ui-state-active a:hover,
+.sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav li.ui-state-active a:focus,
+.sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav li.ui-state-active a:active {
+    opacity: 1 !important;
 }
 
 .sidebar .ui-tabview .ui-tabview-panels {
     display: flex;
     height: 100%;
     width: 100%;
+    padding: 0.5em 0.25em;
 }
 
 .sidebar .ui-tabview .ui-tabview-panel {

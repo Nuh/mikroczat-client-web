@@ -1,20 +1,28 @@
 .user {
+    display: flex;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
     width: 100%;
-    padding: 4px 6px;
-    overflow: hidden;
+    padding: 0.25em 1em 0.25em 0.35em;
+    line-height: 34px;
 }
 
 .user--avatar {
+    box-sizing: content-box;
     margin: 0 2px;
+    padding: 0;
     float: left;
     width: 32px;
     height: 32px;
-    border: 1px solid black;
+    background: #5a5b5c;
+    border: 1px solid #5a5b5c;
     border-radius: 3px;
 }
 
 .user--login {
     float: left;
     margin-left: 5px;
-    line-height: 32px;
+    font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 0.9em;
+    font-weight: normal;
 }

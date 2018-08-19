@@ -1,3 +1,4 @@
+import * as find from "lodash/find";
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import {connect} from "react-redux";
@@ -70,18 +71,19 @@ class Main extends Component {
                            maxSize={this.calculatePercentWidth(0.25, 'max', 450)}
                            defaultSize={this.calculatePercentWidth(0.25, 'min', 366)}>
                     <Room chosen={this.getName()} />
-                    {this.state.visible && <Sidebar chosen={this.getName()} />}
+                    {this.state.visible && <Sidebar channel={this.props.channel} />}
                 </SplitPane>
             </div>
         );
     }
 }
 
-const mapState = ({client, channels}) => {
+const mapState = ({client, myChannels}, {match}) => {
+    let name = match && match.params ? match.params.name : null;
     return {
         client: client,
-        channels: channels.available,
-        myChannels: channels.joined
+        channel: find(myChannels, (ch) => ch.name.toLowerCase() === (name || '').toLowerCase()),
+        channels: myChannels
     };
 };
 

@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 import * as sessionActions from '../actions/session';
 import configuration from '../../configuration';
 
+import Loading from '../../components/Loading';
+
 class Login extends Component {
     static contextTypes = {store: PropTypes.object};
     static propTypes = {location: PropTypes.object.isRequired};
@@ -33,9 +35,7 @@ class Login extends Component {
     }
 
     render() {
-        return (
-            <div>Log in...</div>
-        );
+        return <Loading />;
     }
 }
 

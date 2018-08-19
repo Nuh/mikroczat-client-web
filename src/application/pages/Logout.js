@@ -4,6 +4,8 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as sessionActions from '../actions/session';
 
+import Loading from '../../components/Loading';
+
 class Logout extends Component {
     static contextTypes = {store: PropTypes.object};
     static propTypes = {location: PropTypes.object.isRequired};
@@ -14,9 +16,7 @@ class Logout extends Component {
     }
 
     render() {
-        return (
-            <div>Log out...</div>
-        );
+        return <Loading/>;
     }
 }
 

@@ -8,15 +8,17 @@ class Television extends Component {
     static propTypes = {url: PropTypes.string};
 
     render() {
-        //let {url} = this.props;
-        let url = "https://www.youtube.com/embed/jNQXAC9IVRw?loop=1&modestbranding=1";
+        let {url} = this.props;
         return url ? (
-            <iframe id="television" sandbox="allow-same-origin allow-scripts" src={url}/>
-        ) : (<div id="television" className="empty">
-            Empty :(
-        </div>);
+            <iframe id="television" title="Embedded content" src={url}
+                    allow="autoplay; encrypted-media" allowfullscreen
+                    sandbox="allow-same-origin allow-scripts"/>
+        ) : (
+            <div id="television" className="empty">
+                Empty :(
+            </div>
+        );
     }
 }
-
 
 export default Television;

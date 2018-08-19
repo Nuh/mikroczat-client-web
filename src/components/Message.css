@@ -1,0 +1,34 @@
+.message {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-items: left;
+}
+
+.message--timestamp, .message--user, .message--message {
+    width: auto;
+    padding: 0.25em;
+    white-space: nowrap;
+}
+
+.message--timestamp, .message .user, .message .user--login, .message--user {
+    line-height: 34px;
+    font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 0.9em;
+    font-weight: bolder;
+}
+
+.message--timestamp {
+    font-size: 0.7em;
+}
+
+.message--message {
+    padding-bottom: 4px;
+    align-self: center;
+    line-height: 1.2em;
+    white-space: normal;
+    word-wrap: break-word;
+    word-wrap: break-spaces;
+    word-break: break-word;
+    padding-left: 1em;
+}

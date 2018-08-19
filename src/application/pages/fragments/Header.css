@@ -2,15 +2,16 @@ header {
     box-sizing: border-box;
     width: 100%;
     flex-grow: 0;
-    height: 2em;
-    max-height: 2em;
-    line-height: 2em;
-    padding: 0 1em;
+    height: 2.5em;
+    max-height: 2.5em;
+    line-height: 2.5em;
+    padding: 0 1.25em;
     border: 0 solid #39393a;
     border-bottom-width: 0.1em;
     background: #333333;
+    background: linear-gradient(to bottom, #111111 0%, #333333 25%, #333333 100%);
     font-weight: bolder;
-    font-size: 1.5em;
+    font-size: 1.6em;
     user-select: none
     /*transition: top 0.3s;*/
 }

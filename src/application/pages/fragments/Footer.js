@@ -10,11 +10,6 @@ import './Footer.css'
 class Footer extends Component {
     static contextTypes = {store: PropTypes.object};
 
-    constructor(props, context) {
-        super(props, context);
-        this.refresh = this.refresh.bind(this);
-    }
-
     refresh() {
         let {client} = this.props;
         if (client) {
@@ -30,7 +25,7 @@ class Footer extends Component {
                 ) : (this.props.state === 1) ? (
                     <span>Connected{this.props.latency >= 0 && ` (${this.props.latency}ms)`}</span>
                 ) : (this.props.state > 1) ? (
-                    <a onClick={this.refresh}>
+                    <a onClick={this.refresh.bind(this)}>
                         <FontAwesomeIcon icon={faSync} transform="shrink-3 left-3 down-1" />
                         Disconnected
                     </a>

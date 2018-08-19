@@ -1,0 +1,44 @@
+.channel {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.25em 1em 0.25em 0.35em;
+    overflow: hidden;
+    display: block;
+    line-height: 34px;
+}
+
+.channel--avatar {
+    box-sizing: content-box;
+    float: left;
+    height: 32px;
+    width: 32px;
+    border: 1px solid transparent;
+    padding: 0;
+    margin: 0 2px;
+    font-size: 32px;
+}
+
+.channel--name {
+    float: left;
+    margin-left: 5px;
+    font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+.channel--name:hover,
+.channel--name:focus,
+.channel--name:active {
+    text-decoration: underline;
+}
+
+.channel--users {
+    float: right;
+    display: block;
+    width: 32px;
+    height: 32px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: #5a5b5c;
+    text-align: center;
+}

@@ -1,29 +1,22 @@
-import * as find from 'lodash/find';
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 
+import Loading from '../../../../components/Loading';
 import User from '../../../../components/User';
 
 import './index.css';
 
 class Users extends Component {
     static contextTypes = {store: PropTypes.object};
-    static propTypes = {chosen: PropTypes.string.isRequired};
+    static propTypes = {channel: PropTypes.object.isRequired};
 
     render() {
         let {channel} = this.props;
         return channel && channel.users ?
             channel.users.map((user, index) => (
                 <User key={index} data={user}/>
-            )) : (<div>Loading...</div>);
+            )) : <Loading/>;
     }
 }
 
-const mapState = ({channels}, {chosen}) => {
-    return {
-        channel: find(channels.joined, (ch) => ch.name.toLowerCase() === (chosen || '').toLowerCase())
-    };
-};
-
-export default connect(mapState)(Users);
+export default Users;

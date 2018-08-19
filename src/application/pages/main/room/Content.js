@@ -1,46 +1,77 @@
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faVideo, faVideoSlash, faSmile, faArrowCircleRight} from '@fortawesome/free-solid-svg-icons'
+import {ScrollPanel} from 'primereact/scrollpanel';
+import 'primereact/components/scrollpanel/ScrollPanel.css';
+
+import Loading from '../../../../components/Loading';
+import Message from '../../../../components/Message';
+import Messager from '../../../../components/Messager';
+
 
 import './Content.css';
+import {connect} from "react-redux";
 
 class RoomContent extends Component {
     static contextTypes = {store: PropTypes.object};
     static propTypes = {content: PropTypes.object};
 
+    constructor(props, context) {
+        super(props, context);
+        this.messagesElement = React.createRef();
+    }
+
+    scrollToBottom() {
+        setTimeout(() => {
+            if (this.messagesElement) {
+                let {current} = this.messagesElement;
+                if (current && current.content) {
+                    let {content} = current;
+                    let differentPixels = content.scrollHeight - (content.scrollTop + content.clientHeight);
+                    if (differentPixels <= 100) {
+                        content.scrollTop = content.scrollHeight - content.clientHeight;
+                    }
+                }
+            }
+        }, 0);
+    }
+
     render() {
-        let {content} = this.props;
+        let {content, messages} = this.props;
+        this.scrollToBottom();
         return (
             <div className="room-content">
-                <div className="room-content--title">
-                    <a onClick={e => console.log('test')}>
-                        <FontAwesomeIcon icon={faVideo} transform="shrink-3 left-2 down-1"/>
-                    </a>
-                    <b>#{content.name}</b>
-                    {content.properties.title ? ` | ${content.properties.title}` : ''}
+                <div id="room-tray" className="room-content--title">
+                    {this.props.children && (
+                        <span className="room-content--title-options">
+                            {this.props.children}
+                        </span>
+                    )}
+                    <span className="room-content--title-name">#{content.name}</span>
+                    {content.properties.topic && (
+                        <span className="room-content--title-topic" title={content.properties.topic}>
+                            {content.properties.topic}
+                        </span>
+                    )}
                 </div>
-                <div className="room-content--messages">
-                    pisanko
-                </div>
-                <form className="room-content--input">
-                    <div className="room-content--input-options">
-                        <a onClick={e => console.log('test')}>
-                            <FontAwesomeIcon icon={faSmile} transform="right-2 down-2"/>
-                        </a>
-                    </div>
-                    <input/>
-                    <div className="room-content--input-options--right">
-                        <button type="submit" onClick={e => console.log('test')}>
-                            <FontAwesomeIcon icon={faArrowCircleRight} transform="left-2 down-2"/>
-                        </button>
-                    </div>
-                </form>
+                <ScrollPanel ref={this.messagesElement} className="room-content--messages">
+                    {messages ? messages.map((msg, index) => (
+                        <Message key={index} data={msg}/>
+                    )) : (
+                        <Loading/>
+                    )}
+                </ScrollPanel>
+                <Messager className="room-content--input" channel={content}/>
             </div>
         );
     }
 }
 
+const mapState = ({messages}, {content}) => {
+    let {name} = content;
+    return {
+        messages: messages[name]
+    };
+};
 
-export default RoomContent;
+export default connect(mapState)(RoomContent);

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import {Helmet} from 'react-helmet';
 
+import Loading from '../components/Loading';
 import ConditionRoute from '../components/ConditionRoute';
 
 import Header from './pages/fragments/Header';
@@ -39,9 +40,7 @@ class Application extends Component {
                             <ConditionRoute condition={this.props.authenticated} path="/logout" component={Logout}
                                             redirect="/"/>
                         </Switch>
-                    ) : (
-                        <div>ok</div>
-                    )}
+                    ) : <Loading />}
                 </div>
                 <Footer/>
             </div>
