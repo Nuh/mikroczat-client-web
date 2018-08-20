@@ -59,7 +59,7 @@ class RoomContent extends Component {
                         <Message key={index} data={msg}/>
                     )) : (
                         <Loading showIcon={false}>
-                            Don't be shy! Write something down :)
+                            Don't be shy! Write something :)
                         </Loading>
                     )}
                 </ScrollPanel>
