@@ -29,9 +29,11 @@ class Loading extends Component {
     }
 
     render() {
+        let {showIcon, children} = this.props;
         return (
             <div ref={this.reference} className="loading">
-                <FontAwesomeIcon icon={faCircleNotch} spin />
+                {showIcon !== false && <FontAwesomeIcon icon={faCircleNotch} spin />}
+                {children || ''}
             </div>
         );
     }

@@ -27,11 +27,15 @@ class Message extends Component {
                                    renderers={{
                                        image: props =>
                                            <a href={props.src} title={props.title || props.src} target="_blank">
-                                               <img alt={props.alt || props.src} src={props.src}/>
+                                               {props.alt ? (
+                                                   <img alt={props.alt} src={props.src}/>
+                                               ) : (
+                                                   <img src={props.src}/>
+                                               )}
                                            </a>,
                                        link: props =>
                                            <a href={props.href} title={props.title || props.href} target="_blank">
-                                               {props.children}
+                                               {!props.children instanceof Array || props.children.length > 0 ? props.children : props.href}
                                            </a>
                                    }}/>
                 </div>

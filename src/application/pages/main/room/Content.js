@@ -58,7 +58,9 @@ class RoomContent extends Component {
                     {messages ? messages.map((msg, index) => (
                         <Message key={index} data={msg}/>
                     )) : (
-                        <Loading/>
+                        <Loading showIcon={false}>
+                            Don't be shy! Write something down :)
+                        </Loading>
                     )}
                 </ScrollPanel>
                 <Messager className="room-content--input" channel={content}/>
