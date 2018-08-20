@@ -12,6 +12,13 @@ export const SESSION_CHANGED_STATE = '@@mikroczat-client/CLIENT_STATE_CHANGED';
 export const getResponseType = (type) => `${SERVER_PREFIX}RESPONSE_${type.toUpperCase()}`;
 export const getActionType = (type) => `${SERVER_PREFIX}ACTION_${type.toUpperCase()}`;
 
+const autoReconnect = () => {
+    this._triedReconnect = (this._triedReconnect || 0) + 1;
+    if (this._triedReconnect < 10) {
+        setTimeout(() => this._connect(session), 6000);
+    }
+}
+
 class ApplicationClient extends Client {
 
     constructor() {
@@ -50,6 +57,7 @@ class ApplicationClient extends Client {
                     this.join(ch);
                 });
             }
+            this._triedReconnect = 0;
             store.dispatch({type: SESSION_OPENED, client: this});
             store.dispatch({type: SESSION_CHANGED_STATE, client: this});
             if (!this._intervalChannelList) {
@@ -58,15 +66,11 @@ class ApplicationClient extends Client {
                 }, 15000);
             }
         });
-        this.once('close', () => {
-            this.channelName = null;
-        });
         this.once('error', () => {
             this.channelName = null;
-            this._tryReconnect = (this._tryReconnect || 0) + 1;
-            if (this._tryReconnect < 10) {
-                setTimeout(() => this._connect(session), 6000);
-            }
+            autoReconnect.bind(this)();
+            store.dispatch({type: SESSION_CHANGED_STATE, client: this});
+
         });
         store.dispatch({type: SESSION_CHANGED_STATE, client: this});
         return await super.connect(configuration.server.websocket, this.session = session);
@@ -77,9 +81,11 @@ class ApplicationClient extends Client {
             if (this._intervalChannelList) {
                 this._intervalChannelList = clearInterval(this._intervalChannelList);
             }
+            autoReconnect.bind(this)();
             store.dispatch({type: SESSION_CLOSED, client: this});
             store.dispatch({type: SESSION_CHANGED_STATE, client: this});
         });
+        this.channelName = null;
         store.dispatch({type: SESSION_CHANGED_STATE, client: this});
         return await super.disconnect();
     }
