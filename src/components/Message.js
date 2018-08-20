@@ -1,7 +1,3 @@
-import * as defaults from 'lodash/defaults';
-import * as flatMap from 'lodash/flatMap';
-import * as fill from 'lodash/fill';
-import * as zipObject from 'lodash/zipObject';
 import * as moment from 'moment';
 import React, {Component} from 'react';
 
