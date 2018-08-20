@@ -7,17 +7,34 @@
     line-height: 34px;
 }
 
-.user--avatar {
+.user--avatar,
+.user--avatar--bot,
+.user--avatar--male,
+.user--avatar--female,
+.user--avatar--undefined {
     box-sizing: content-box;
     margin: 0 2px;
     padding: 0;
     float: left;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     background: #5a5b5c;
     border: 1px solid #5a5b5c;
     border-radius: 3px;
 }
+
+.user--avatar--female {
+    box-shadow: 0 2px 0 0 #f246d0;
+}
+
+.user--avatar--male {
+    box-shadow: 0 2px 0 0 #46abf2;
+}
+
+.user--avatar--bot {
+    box-shadow: 0 2px 0 0 #000000;
+}
+
 
 .user--login {
     float: left;

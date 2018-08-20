@@ -5,10 +5,11 @@ import Loading from '../components/Loading';
 
 import './User.css';
 
-const User = ({data, className}) => {
+const User = ({className, data}) => {
     return data ? (
-        <div className={`${className} user`} title={data.username}>
-            <img className="user--avatar" alt={data.username} src={data.avatar || '/img/no-avatar.png'}/><div className="user--login">
+        <div className={`${className || ''} user`} title={data.username}>
+            <img className="user--avatar" alt={data.username} src={data.avatar || '/img/no-avatar.png'}/>
+            <div className="user--login">
                 {data.username}
             </div>
         </div>
@@ -16,8 +17,8 @@ const User = ({data, className}) => {
 };
 
 User.propTypes = {
-    data: PropTypes.object.isRequired,
-    className: PropTypes.any
+    className: PropTypes.any,
+    data: PropTypes.object.isRequired
 };
 
 export default User;
