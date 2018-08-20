@@ -39,7 +39,7 @@
 }
 
 .message--message img {
-    max-height: 3em;
+    max-height: 33vh;
     width: auto;
     object-fit: contain;
 }
