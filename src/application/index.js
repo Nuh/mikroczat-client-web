@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import {Helmet} from 'react-helmet';
 
+import configuration from '../configuration';
+
 import Loading from '../components/Loading';
 import ConditionRoute from '../components/ConditionRoute';
 
@@ -33,7 +35,7 @@ class Application extends Component {
                     <ConditionRoute condition={!this.props.authenticated} path="/login" component={Login} redirect="/"/>
                     {this.props.checked ? (
                         <Switch>
-                            <Route exact path="/" render={() => (<Redirect to="/room/general"/>)}/>
+                            <Route exact path="/" render={() => (<Redirect to={`/room/${configuration.channels.default}`}/>)}/>
                             <Route path="/room/:name" component={Main}/>
 
                             <ConditionRoute condition={this.props.authenticated} path="/profile" component={Profile}/>

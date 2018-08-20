@@ -12,17 +12,39 @@ export const SESSION_CHANGED_STATE = '@@mikroczat-client/CLIENT_STATE_CHANGED';
 export const getResponseType = (type) => `${SERVER_PREFIX}RESPONSE_${type.toUpperCase()}`;
 export const getActionType = (type) => `${SERVER_PREFIX}ACTION_${type.toUpperCase()}`;
 
-const autoReconnect = () => {
-    this._triedReconnect = (this._triedReconnect || 0) + 1;
-    if (this._triedReconnect < 10) {
-        setTimeout(() => this._connect(session), 6000);
-    }
-}
-
 class ApplicationClient extends Client {
 
     constructor() {
         super();
+
+        this.on('open', () => {
+            if (this.channels) {
+                this.channels.forEach((ch) => {
+                    this.join(ch);
+                });
+            }
+            store.dispatch({type: SESSION_OPENED, client: this});
+            if (!this._intervalChannelList) {
+                this._intervalChannelList = setInterval(() => {
+                    this.fetch('channellist');
+                }, 15000);
+            }
+        });
+
+        this.on('close', () => {
+            if (this._intervalChannelList) {
+                this._intervalChannelList = clearInterval(this._intervalChannelList);
+            }
+            store.dispatch({type: SESSION_CLOSED, client: this});
+            this.autoReconnect();
+        });
+
+        this.on('error', () => this.autoReconnect());
+
+        this.on('state', () => store.dispatch({
+            type: SESSION_CHANGED_STATE,
+            client: this
+        }));
 
         this.on('ping', (latency) => store.dispatch({
             type: getResponseType('ping'),
@@ -37,6 +59,19 @@ class ApplicationClient extends Client {
         }));
     }
 
+
+    autoReconnect() {
+        if (this.getStatus() !== 1) {
+            this._triedReconnect = (this._triedReconnect || 0) + 1;
+            if (this._triedReconnect < 10) {
+                if (this._triedReconnect === 1) {
+                    this.once('open', () => this._triedReconnect = 0);
+                }
+                setTimeout(() => this.connect(), 10000);
+            }
+        }
+    };
+
     async connect() {
         sessionService
             .loadSession()
@@ -50,43 +85,11 @@ class ApplicationClient extends Client {
         }
 
         await this.disconnect();
-
-        this.once('open', () => {
-            if (this.channels) {
-                this.channels.forEach((ch) => {
-                    this.join(ch);
-                });
-            }
-            this._triedReconnect = 0;
-            store.dispatch({type: SESSION_OPENED, client: this});
-            store.dispatch({type: SESSION_CHANGED_STATE, client: this});
-            if (!this._intervalChannelList) {
-                this._intervalChannelList = setInterval(() => {
-                    this.fetch('channellist');
-                }, 15000);
-            }
-        });
-        this.once('error', () => {
-            this.channelName = null;
-            autoReconnect.bind(this)();
-            store.dispatch({type: SESSION_CHANGED_STATE, client: this});
-
-        });
-        store.dispatch({type: SESSION_CHANGED_STATE, client: this});
         return await super.connect(configuration.server.websocket, this.session = session);
     }
 
     async disconnect(reason) {
-        this.once('close', () => {
-            if (this._intervalChannelList) {
-                this._intervalChannelList = clearInterval(this._intervalChannelList);
-            }
-            autoReconnect.bind(this)();
-            store.dispatch({type: SESSION_CLOSED, client: this});
-            store.dispatch({type: SESSION_CHANGED_STATE, client: this});
-        });
         this.channelName = null;
-        store.dispatch({type: SESSION_CHANGED_STATE, client: this});
         return await super.disconnect();
     }
 

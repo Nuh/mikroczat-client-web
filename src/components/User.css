@@ -4,14 +4,10 @@
     box-sizing: border-box;
     width: 100%;
     padding: 0.25em 1em 0.25em 0.35em;
-    line-height: 34px;
+    line-height: 32px;
 }
 
-.user--avatar,
-.user--avatar--bot,
-.user--avatar--male,
-.user--avatar--female,
-.user--avatar--undefined {
+.user--avatar {
     box-sizing: content-box;
     margin: 0 2px;
     padding: 0;
@@ -23,18 +19,17 @@
     border-radius: 3px;
 }
 
-.user--avatar--female {
+.user--female .user--avatar {
     box-shadow: 0 2px 0 0 #f246d0;
 }
 
-.user--avatar--male {
+.user--male .user--avatar {
     box-shadow: 0 2px 0 0 #46abf2;
 }
 
-.user--avatar--bot {
+.user--bot .user--avatar {
     box-shadow: 0 2px 0 0 #000000;
 }
-
 
 .user--login {
     float: left;

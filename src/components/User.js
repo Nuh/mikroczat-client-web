@@ -7,7 +7,7 @@ import './User.css';
 
 const User = ({className, data}) => {
     return data ? (
-        <div className={`${className || ''} user`} title={data.username}>
+        <div className={`${className || ''} user ${data.sex === 'm' ? 'user--male' : data.sex === 'f' ? 'user--female' : data.sex === 'b' ? 'user--bot' : ''}`} title={data.username}>
             <img className="user--avatar" alt={data.username} src={data.avatar || '/img/no-avatar.png'}/>
             <div className="user--login">
                 {data.username}

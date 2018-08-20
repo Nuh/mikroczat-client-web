@@ -11,7 +11,7 @@ import './Channel.css';
 
 const Channel = ({data, joined}) => {
     return data ? (
-        <NavLink to={`/room/${data.name}`} className="channel" activeClassName="blocked" >
+        <NavLink to={`/room/${data.name}`} className="channel" activeClassName="blocked" target="_blank">
             <div className="channel--avatar"><FontAwesomeIcon icon={faHashtag} /></div>
             <span className="channel--name">{data.name}</span>
             <span className="channel--users">{joined ? data.users.length : data.users}</span>

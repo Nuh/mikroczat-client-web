@@ -1,4 +1,5 @@
 import * as once from 'lodash/once';
+import * as defaults from 'lodash/defaults';
 import {EventEmitter2} from 'eventemitter2';
 import * as WebSocket from 'isomorphic-ws';
 import uuid from 'uuid';
@@ -22,11 +23,11 @@ let getUrl = (url, params) => {
 };
 
 export default class Client extends EventEmitter2 {
-    constructor() {
-        super({
+    constructor(options) {
+        super(defaults(options, {
             newListener: false,
-            maxListeners: 20
-        });
+            maxListeners: 50
+        }));
         this._socket = null;
         this._messages = {};
         this.latency = null;
@@ -52,6 +53,7 @@ export default class Client extends EventEmitter2 {
                 console.error('Failed parse message:', str, e);
             }
         }, handleError = (socket) => once(async (e) => {
+            this.emit('state', e, this, socket);
             this.emit('error', e, this, socket);
             await this.disconnect();
         }), handlerClose = (socket) => once((e) => {
@@ -61,13 +63,15 @@ export default class Client extends EventEmitter2 {
             socket.onclose = null;
             socket.onerror = null;
             socket.onmessage = null;
-            this.emit('close', this, socket, e);
+            this.emit('state', e, this, socket);
+            this.emit('close', e, this, socket);
         }), handlerOpen = (socket) => once((e) => {
             socket.onopen = null;
             socket.onclose = handlerClose(socket);
             socket.onerror = handleError(socket);
             socket.onmessage = handlerMessages(socket);
-            this.emit('open', this, socket, e);
+            this.emit('state', e, this, socket);
+            this.emit('open', e, this, socket);
             if (!this._intervalPing) {
                 this._intervalPing = setInterval(() => {
                     let message = this.send('ping', null, () => {
@@ -84,6 +88,7 @@ export default class Client extends EventEmitter2 {
                 this._socket = new WebSocket(url);
                 this._socket.onerror = handleError(this._socket);
                 this._socket.onopen = handlerOpen(this._socket);
+                this.emit('state', null, this, this._socket);
             }
         }
         return this;
@@ -99,7 +104,7 @@ export default class Client extends EventEmitter2 {
     };
 
     getStatus() {
-        return (this._socket ? this._socket.readyState : null) || 0;
+        return (this._socket ? this._socket.readyState : 3) || 0;
     }
 
     send(type, data, callback) {
