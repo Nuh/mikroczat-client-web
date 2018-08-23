@@ -39,7 +39,8 @@
 }
 
 .message--message img {
-    max-height: 33vh;
     width: auto;
+    max-height: 33vh;
+    max-width: 100%;
     object-fit: contain;
 }

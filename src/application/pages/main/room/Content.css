@@ -37,9 +37,7 @@
 
 .room-content--messages .ui-scrollpanel-content {
     position: absolute;
-    height: 100%;
-    padding-right: 18px;
-    padding-bottom: 0;
+    overflow: scroll;
 }
 
 .room-content--input {
