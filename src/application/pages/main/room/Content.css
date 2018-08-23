@@ -6,6 +6,7 @@
 }
 
 .room-content--title {
+    z-index: 1;
     width: 100%;
     margin-bottom: 4px;
     background: #39393a;
@@ -42,6 +43,7 @@
 }
 
 .room-content--input {
+    z-index: 1;
     width: 100%;
     padding: 0.5em;
 }

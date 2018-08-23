@@ -58,7 +58,7 @@ class Main extends Component {
                     <title>{this.getTitle()}</title>
                 </Helmet>
                 <TrayElements>
-                    <a onClick={e => actions.toggleState(SETTINGS_FIELD_SIDEBAR_VISIBLE)}
+                    <a onClick={e => actions.toggleState(SETTINGS_FIELD_SIDEBAR_VISIBLE, true)}
                        style={{opacity: visible ? 1 : 0.5}}>
                         <FontAwesomeIcon icon={faUsers}/>
                     </a>
