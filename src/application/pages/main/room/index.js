@@ -1,8 +1,12 @@
+import * as find from "lodash/find";
 import PropTypes from "prop-types";
+import {bindActionCreators} from "redux";
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import SplitPane from 'react-split-pane';
-import * as find from "lodash/find";
+import {CSSTransitionGroup} from 'react-transition-group';
+
+import * as settingsActions from "../../../actions/settings";
 
 import Loading from '../../../../components/Loading';
 
@@ -12,31 +16,25 @@ import RoomContent from './Content';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faVideo, faVideoSlash} from '@fortawesome/free-solid-svg-icons'
 
+const SETTINGS_FIELD_TELEVISION_VISIBLE = 'televisionVisible';
+
 class Room extends Component {
     static contextTypes = {store: PropTypes.object};
-
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            visible: false
-        };
-    }
 
     calculatePercentWidth(width, func = 'min', px) {
         let calc = window.innerWidth * width;
         return px ? Math[func](calc, px) : calc;
     }
 
-    toggleTelevision() {
-        this.setState({
-            visible: !this.state.visible
-        });
-    }
-
     render() {
-        let {channel} = this.props;
+        let {actions, channel, televisionVisible} = this.props;
         return channel ? (
-            <SplitPane split="vertical" pane1Style={{display: this.state.visible ? 'block' : 'none'}}
+            <SplitPane allowResize={televisionVisible}
+                       pane1Style={{
+                           maxWidth: televisionVisible ? '100vw' : '0',
+                           opacity: televisionVisible ? '1' : '0',
+                           transition: 'max-width 500ms ease, opacity 500ms linear'
+                       }}
                        minSize={this.calculatePercentWidth(0.4, 'min', 400)}
                        maxSize={this.calculatePercentWidth(0.6, 'max', 1000)}
                        defaultSize={this.calculatePercentWidth(0.6, 'max', 1000)}
@@ -51,16 +49,20 @@ class Room extends Component {
                            if (el) {
                                el.style.pointerEvents = 'initial'
                            }
-                       }}>
-                {this.state.visible ? (
-                    <Television url={channel.properties.embed}/>
-                ) : (
-                    <Loading/>
-                )}
+                       }}
+                       onChange={size => localStorage.setItem('splitPos', size)}>
+                <CSSTransitionGroup transitionEnterTimeout={500} transitionLeaveTimeout={500}
+                                    transitionName="test">
+                    {televisionVisible ? (
+                        <Television url={channel.properties.embed}/>
+                    ) : (
+                        <Loading/>
+                    )}
+                </CSSTransitionGroup>
                 <RoomContent content={channel}>
-                    {(channel.properties.embed || this.state.visible) &&
-                    <a onClick={this.toggleTelevision.bind(this)}>
-                        <FontAwesomeIcon icon={this.state.visible ? faVideoSlash : faVideo}
+                    {(channel.properties.embed || televisionVisible) &&
+                    <a onClick={e => actions.toggleState(SETTINGS_FIELD_TELEVISION_VISIBLE)}>
+                        <FontAwesomeIcon icon={televisionVisible ? faVideoSlash : faVideo}
                                          transform="shrink-3 left-3 down-1"/>
                     </a>
                     }
@@ -70,10 +72,18 @@ class Room extends Component {
     }
 }
 
-const mapState = ({myChannels}, {chosen}) => {
+const mapState = ({myChannels, settings}, {chosen}) => {
+    let settingsState = (settings || {}).state || {};
     return {
-        channel: find(myChannels, (ch) => ch.name.toLowerCase() === (chosen || '').toLowerCase())
+        channel: find(myChannels, (ch) => ch.name.toLowerCase() === (chosen || '').toLowerCase()),
+        televisionVisible: settingsState[SETTINGS_FIELD_TELEVISION_VISIBLE],
     };
 };
 
-export default connect(mapState)(Room);
+const mapDispatch = (dispatch) => {
+    return {
+        actions: bindActionCreators(settingsActions, dispatch)
+    };
+};
+
+export default connect(mapState, mapDispatch)(Room);

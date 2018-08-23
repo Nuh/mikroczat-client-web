@@ -11,26 +11,26 @@
     white-space: nowrap;
 }
 
-.message--timestamp, .message .user, .message .user--login, .message--user {
+.message--timestamp, .message--user {
     line-height: 34px;
     font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
     font-size: 0.9em;
-    font-weight: bolder;
 }
 
 .message--timestamp {
-    font-size: 0.7em;
+    font-size: 0.75em;
 }
 
 .message--message {
     padding-bottom: 4px;
     align-self: center;
     line-height: 1.2em;
-    white-space: normal;
-    word-wrap: break-word;
-    word-wrap: break-spaces;
-    word-break: break-word;
     padding-left: 1em;
+    white-space: normal;
+    word-break: break-all;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .message--message p {

@@ -11,7 +11,7 @@ class Television extends Component {
         let {url} = this.props;
         return url ? (
             <iframe id="television" title="Embedded content" src={url}
-                    allow="autoplay; encrypted-media" allowfullscreen
+                    allow="autoplay; encrypted-media" allowFullScreen
                     sandbox="allow-same-origin allow-scripts"/>
         ) : (
             <div id="television" className="empty">

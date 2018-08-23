@@ -62,7 +62,7 @@ class Messager extends Component {
 
     render() {
         return (
-            <form className="messager" onSubmit={this.handleSubmit.bind(this)}>
+            <form className={`${this.props.className || ''} messager`} onSubmit={this.handleSubmit.bind(this)}>
                 <div className="messager--options">
                     <a onClick={e => console.log('todo...')}>
                         <FontAwesomeIcon icon={faSmile} transform="right-2 down-2"/>

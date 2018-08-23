@@ -1,9 +1,13 @@
 import * as find from "lodash/find";
 import PropTypes from "prop-types";
+import {bindActionCreators} from "redux";
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {Helmet} from 'react-helmet';
 import SplitPane from 'react-split-pane';
+import {CSSTransitionGroup} from 'react-transition-group';
+
+import * as settingsActions from "../../actions/settings";
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faUsers} from '@fortawesome/free-solid-svg-icons'
@@ -11,17 +15,13 @@ import {faUsers} from '@fortawesome/free-solid-svg-icons'
 import Room from './room';
 import Sidebar from './sidebar';
 
+import Loading from '../../../components/Loading';
 import TrayElements from '../../../components/TrayElements';
+
+const SETTINGS_FIELD_SIDEBAR_VISIBLE = 'sidebarVisible';
 
 class Main extends Component {
     static contextTypes = {store: PropTypes.object};
-
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            visible: true
-        };
-    }
 
     getName() {
         let name = this.props.match.params.name;
@@ -48,13 +48,9 @@ class Main extends Component {
         return px ? Math[func](calc, px) : calc;
     }
 
-    toggleSidebar() {
-        this.setState({
-            visible: !this.state.visible
-        });
-    }
-
     render() {
+        let {actions} = this.props;
+        let visible = this.props[SETTINGS_FIELD_SIDEBAR_VISIBLE] !== false;
         this.validate();
         return (
             <div>
@@ -62,29 +58,52 @@ class Main extends Component {
                     <title>{this.getTitle()}</title>
                 </Helmet>
                 <TrayElements>
-                    <a onClick={() => this.toggleSidebar()} style={{opacity: this.state.visible ? 1 : 0.5}}>
-                        <FontAwesomeIcon icon={faUsers} />
+                    <a onClick={e => actions.toggleState(SETTINGS_FIELD_SIDEBAR_VISIBLE)}
+                       style={{opacity: visible ? 1 : 0.5}}>
+                        <FontAwesomeIcon icon={faUsers}/>
                     </a>
                 </TrayElements>
-                <SplitPane split="vertical" primary="second" pane2Style={{display: this.state.visible ? 'block' : 'none'}}
+                <SplitPane primary="second" allowResize={visible}
+                           pane2Style={{
+                               maxWidth: visible ? '100vw' : '0',
+                               opacity: visible ? '1' : '0',
+                               transition: 'max-width 500ms ease, opacity 500ms linear'
+                           }}
                            minSize={this.calculatePercentWidth(0.15, 'min', 300)}
                            maxSize={this.calculatePercentWidth(0.25, 'max', 450)}
                            defaultSize={this.calculatePercentWidth(0.25, 'min', 366)}>
-                    <Room chosen={this.getName()} />
-                    {this.state.visible && <Sidebar channel={this.props.channel} />}
+                    <Room chosen={this.getName()}/>
+                    <CSSTransitionGroup
+                        transitionEnterTimeout={500}
+                        transitionLeaveTimeout={500}
+                        transitionName="animation-hide">
+                        {visible ? (
+                            <Sidebar key="sidebar" channel={this.props.channel}/>
+                        ) : (
+                            <Loading key="loading"/>
+                        )}
+                    </CSSTransitionGroup>
                 </SplitPane>
             </div>
         );
     }
 }
 
-const mapState = ({client, myChannels}, {match}) => {
+const mapState = ({client, myChannels, settings}, {match}) => {
     let name = match && match.params ? match.params.name : null;
+    let settingsState = (settings || {}).state || {};
     return {
         client: client,
         channel: find(myChannels, (ch) => ch.name.toLowerCase() === (name || '').toLowerCase()),
-        channels: myChannels
+        channels: myChannels,
+        sidebarVisible: settingsState[SETTINGS_FIELD_SIDEBAR_VISIBLE],
     };
 };
 
-export default connect(mapState)(Main);
+const mapDispatch = (dispatch) => {
+    return {
+        actions: bindActionCreators(settingsActions, dispatch)
+    };
+};
+
+export default connect(mapState, mapDispatch)(Main);

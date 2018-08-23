@@ -27,11 +27,7 @@ class Message extends Component {
                                    renderers={{
                                        image: props =>
                                            <a href={props.src} title={props.title || props.src} target="_blank">
-                                               {props.alt ? (
-                                                   <img alt={props.alt} src={props.src}/>
-                                               ) : (
-                                                   <img src={props.src}/>
-                                               )}
+                                               <img alt={props.alt || props.src} src={props.src}/>
                                            </a>,
                                        link: props =>
                                            <a href={props.href} title={props.title || props.href} target="_blank">

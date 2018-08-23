@@ -1,0 +1,9 @@
+.animation-hide-leave, .animation-hide-enter, .animation-hide-enter.animation-hide-enter-active {
+    opacity: 1;
+}
+
+.animation-hide-leave.animation-hide-leave-active {
+    opacity: 0.01;
+    transition: all 500ms linear;
+}
+

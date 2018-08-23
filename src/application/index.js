@@ -18,6 +18,7 @@ import Login from './pages/Login';
 import Logout from './pages/Logout';
 
 import './index.css';
+import './animations.css';
 
 class Application extends Component {
     static contextTypes = {store: PropTypes.object};
