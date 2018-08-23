@@ -53,6 +53,7 @@
     height: 110%;
     border: 1px solid transparent;
     text-align: center;
+    user-select: none;
 }
 
 .sidebar .ui-tabview.ui-tabview-top > .ui-tabview-nav li.ui-state-active a {

@@ -93,12 +93,16 @@ class RoomContent extends Component {
                 </div>
                 <ScrollPanel ref={this.messagesElement} className="room-content--messages">
                     <ReactResizeDetector handleWidth handleHeight skipOnMount refreshMode="debounce" refreshRate={75}
-                                         onResize={(e) => this.scrollToBottom(false, 0)} />
-                    {messages && messages.map((msg, index) => <Message key={index} data={msg}/>)}
+                                         onResize={(e) => this.scrollToBottom(false, 0)}/>
+                    <CSSTransitionGroup transitionEnterTimeout={100} transitionLeaveTimeout={500}
+                                        transitionName="animation-hide">
+                        {messages && messages.map((msg) =>
+                            <Message key={msg.id} data={msg} voteUp={(msg.vote || {}).plus} voteDown={(msg.vote || {}).minus}/>)}
+                    </CSSTransitionGroup>
                 </ScrollPanel>
                 <CSSTransitionGroup transitionEnterTimeout={0} transitionLeaveTimeout={500}
                                     transitionName="animation-hide">
-                    {!messages && (
+                    {!messages.length && (
                         <Loading showIcon={false} description={[
                             "Don't be shy! Write something :)",
                             "Oh, look! Still no one writes... :(",
@@ -115,7 +119,7 @@ class RoomContent extends Component {
 const mapState = ({messages}, {content}) => {
     let {name} = content;
     return {
-        messages: messages[name]
+        messages: (messages[name] || []).slice(-100)
     };
 };
 

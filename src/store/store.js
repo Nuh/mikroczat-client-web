@@ -4,7 +4,7 @@ import {routerMiddleware} from 'connected-react-router';
 import reducers from '../application/reducers';
 import history from './history';
 
-const composeEnhancer = compose; //window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 // Initalize store
 export const store = createStore(reducers, undefined,

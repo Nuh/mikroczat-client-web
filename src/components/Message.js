@@ -6,14 +6,36 @@ import ReactMarkdown from 'react-markdown';
 import User from './User';
 
 import './Message.css';
+import {connect} from "react-redux";
 
 const markdown = {
     disallowedTypes: ['heading', 'break', 'thematicBreak', 'blockquote', 'linkReference', 'imageReference', 'table', 'tableHead', 'tableBody', 'tableRow', 'tableCell', 'list', 'listItem', 'code', 'html']
 };
 
 class Message extends Component {
+
+    voteUp() {
+        let {client, data} = this.props;
+        client.send('channelmessagevote', {
+            channel: data.data.channel,
+            type: data.data.type || 'message',
+            messageId: data.id,
+            sign: 'plus'
+        });
+    }
+
+    voteDown() {
+        let {client, data} = this.props;
+        client.send('channelmessagevote', {
+            channel: data.data.channel,
+            type: data.data.type || 'message',
+            messageId: data.id,
+            sign: 'minus'
+        });
+    }
+
     render() {
-        let {data} = this.props;
+        let {data, voteUp, voteDown} = this.props;
         let date = moment(data.created);
         return (
             <div className="message">
@@ -35,9 +57,21 @@ class Message extends Component {
                                            </a>
                                    }}/>
                 </div>
+                <div className="message--vote">
+                    <a className={`message--vote--up ${voteUp ? '' : 'empty'} ${(voteUp || 0) > (voteDown || 0) ? 'dominance' : ''}`}
+                       onClick={this.voteUp.bind(this)}>+{voteUp || 0}</a>
+                    <a className={`message--vote--down ${voteDown ? '' : 'empty'} ${(voteDown || 0) > (voteUp || 0) ? 'dominance' : ''}`}
+                       onClick={this.voteDown.bind(this)}>-{voteDown || 0}</a>
+                </div>
             </div>
         );
     }
 }
 
-export default Message;
+const mapState = ({client}) => {
+    return {
+        client
+    };
+};
+
+export default connect(mapState)(Message);
