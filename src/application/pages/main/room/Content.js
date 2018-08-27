@@ -1,3 +1,4 @@
+import * as debounce from 'lodash/debounce';
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import ReactResizeDetector from 'react-resize-detector';
@@ -8,6 +9,7 @@ import {ScrollPanel} from 'primereact/scrollpanel';
 import 'primereact/components/scrollpanel/ScrollPanel.css';
 
 import Loading from '../../../../components/Loading';
+import Vote from '../../../../components/Vote';
 import Message from '../../../../components/Message';
 import Messager from '../../../../components/Messager';
 
@@ -23,22 +25,47 @@ class RoomContent extends Component {
     constructor(props, context) {
         super(props, context);
         this.messagesElement = React.createRef();
+        this._handleScroll = debounce(this._handleScroll.bind(this), 100, {leading: true, trailing: true});
     }
 
     componentDidMount() {
         let content = this.getScrollableContentElement();
         if (content) {
             this.scrollToBottom();
+            content.addEventListener('scroll', this._handleScroll);
         }
     }
 
     shouldComponentUpdate() {
-        this.autoscroll = this.isScrolledToBottom(false);
+        if (!this.autoscroll && this.isScrolledToBottom(true)) {
+            this.autoscroll = true;
+        }
         return true;
     }
 
     componentDidUpdate() {
         this.scrollToBottom();
+    }
+
+    componentWillUnmount() {
+        let content = this.getScrollableContentElement();
+        if (content) {
+            content.removeEventListener('scroll', this._handleScroll);
+        }
+    }
+
+    _handleScroll(e) {
+        let {target} = e;
+        if (target) {
+            if (target.scrollTop < this._lastScrollTop) {
+                if (this.autoscroll) {
+                    this.autoscroll = false;
+                }
+            } else if (this.isScrolledToBottom()) {
+                this.autoscroll = true;
+            }
+            this._lastScrollTop = target.scrollTop;
+        }
     }
 
     getScrollableContentElement() {
@@ -55,22 +82,22 @@ class RoomContent extends Component {
         let content = this.getScrollableContentElement();
         if (content) {
             let visibleBottomPosition = content.scrollTop + content.clientHeight;
-            return content.scrollHeight - (strict ? 0 : Math.max(content.clientHeight * 0.5, 100)) <= visibleBottomPosition;
+            return content.scrollHeight - (strict ? 0 : Math.max(content.clientHeight * 0.10, 50)) <= visibleBottomPosition;
         }
     }
 
-    scrollToBottom(force, timeout = 250) {
+    scrollToBottom(force, timeout = 0) {
         const _scrollToBottom = () => {
-            let content = this.getScrollableContentElement();
-            if (content) {
-                content.scrollTop = content.scrollHeight;
+            if (this.autoscroll !== false || force) {
+                let content = this.getScrollableContentElement();
+                if (content) {
+                    content.scrollTop = content.scrollHeight;
+                }
             }
         };
-        if (this.autoscroll !== false || force) {
-            _scrollToBottom()
-            if (timeout) {
-                setTimeout(_scrollToBottom, timeout);
-            }
+        _scrollToBottom();
+        if (timeout) {
+            setTimeout(_scrollToBottom, timeout);
         }
     }
 
@@ -93,11 +120,13 @@ class RoomContent extends Component {
                 </div>
                 <ScrollPanel ref={this.messagesElement} className="room-content--messages">
                     <ReactResizeDetector handleWidth handleHeight skipOnMount refreshMode="debounce" refreshRate={75}
-                                         onResize={(e) => this.scrollToBottom(false, 0)}/>
+                                         onResize={() => this.scrollToBottom(false, 0)}/>
                     <CSSTransitionGroup transitionEnterTimeout={100} transitionLeaveTimeout={500}
                                         transitionName="animation-hide">
                         {messages && messages.map((msg) =>
-                            <Message key={msg.id} data={msg} voteUp={(msg.vote || {}).plus} voteDown={(msg.vote || {}).minus}/>)}
+                            <Message key={msg.id} data={msg} onLoad={() => this.scrollToBottom(false, 0)}>
+                                <Vote className="message--vote" message={msg}/>
+                            </Message>)}
                     </CSSTransitionGroup>
                 </ScrollPanel>
                 <CSSTransitionGroup transitionEnterTimeout={0} transitionLeaveTimeout={500}

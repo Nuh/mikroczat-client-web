@@ -1,0 +1,23 @@
+.image img {
+    object-fit: contain;
+    overflow: hidden;
+}
+
+.image.image--animation img {
+    transition: opacity 300ms ease-in-out;
+}
+
+.image--lightbox--external-link {
+    border: 0;
+    padding: 0;
+    margin: 0 0.4em;
+    opacity: 0.7;
+    vertical-align: middle;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+}
+
+.image--lightbox--external-link:hover, .image--lightbox--external-link:focus, .image--lightbox--external-link:active {
+    opacity: 1;
+}

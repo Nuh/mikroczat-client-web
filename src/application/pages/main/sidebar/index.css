@@ -7,21 +7,16 @@
 .sidebar {
     background: #444444;
     border-left: 2px solid #39393a;
-}
-
-.sidebar .ui-scrollpanel-content {
-    padding-bottom: 18px;
-    padding-right: 18px;
     color: rgba(255, 255, 255, 0.8);
 }
 
-.sidebar .ui-scrollpanel-content a {
+.sidebar a {
     text-decoration: none;
 }
 
-.sidebar .ui-scrollpanel-content a:hover,
-.sidebar .ui-scrollpanel-content a:focus,
-.sidebar .ui-scrollpanel-content a:active {
+.sidebar a:hover,
+.sidebar a:focus,
+.sidebar a:active {
     color: rgba(255, 255, 255, 0.9);
 }
 

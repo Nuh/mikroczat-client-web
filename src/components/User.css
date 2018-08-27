@@ -13,10 +13,13 @@
     padding: 0;
     float: left;
     width: 30px;
+    max-width: 30px;
     height: 30px;
+    max-height: 30px;
     background: #5a5b5c;
     border: 1px solid #5a5b5c;
     border-radius: 3px;
+    overflow: hidden;
 }
 
 .user--female .user--avatar {

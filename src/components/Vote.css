@@ -1,0 +1,31 @@
+.vote {
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 0.75em;
+}
+
+.vote .vote--up, .vote .vote--down {
+    min-width: 3em;
+    margin: 0 0.125em;
+    background: rgba(68, 68, 68, 0.45);
+    border: 1px solid rgba(68, 68, 68, 0.25);
+    border-radius: 4px;
+    text-align: center;
+    opacity: 0.35;
+    user-select: none;
+}
+
+.vote .vote--up.dominance, .vote .vote--up:hover, .vote .vote--up:focus, .vote .vote--up:active,
+.vote .vote--down.dominance, .vote .vote--down:hover, .vote .vote--down:focus, .vote .vote--down:active {
+    opacity: 1;
+    font-weight: bolder;
+    text-shadow: 2px 2px rgba(68, 68, 68, 0.10);
+}
+
+.vote .vote--up {
+    color: #3b915f
+}
+
+.vote .vote--down {
+    color: #c0392b
+}

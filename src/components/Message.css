@@ -30,60 +30,29 @@
     white-space: normal;
     word-break: break-all;
     word-break: break-word;
+    overflow: hidden;
     overflow-wrap: break-word;
     hyphens: auto;
     flex-grow: 1;
 }
 
 .message--message p {
+    overflow: hidden;
     margin: 0;
     padding: 0;
 }
 
 .message--message img {
-    width: auto;
     max-height: 33vh;
     max-width: 100%;
-    object-fit: contain;
 }
 
-.message--vote {
-    display: flex;
-    flex-wrap: nowrap;
-    font-size: 0.75em;
-}
 
-.message--vote .message--vote--up, .message--vote .message--vote--down {
-    min-width: 3em;
-    margin: 0 0.125em;
-    background: rgba(68, 68, 68, 0.45);
-    border: 1px solid rgba(68, 68, 68, 0.25);
-    border-radius: 4px;
-    text-align: center;
-    opacity: 0.35;
-    user-select: none;
-}
-
-.message--vote .message--vote--up.empty, .message--vote .message--vote--down.empty {
+.message .vote--up.empty, .message .vote--down.empty {
     visibility: hidden;
 }
 
-.message--vote:hover .message--vote--up, .message--vote:focus .message--vote--up, .message--vote:active .message--vote--up,
-.message--vote:hover .message--vote--down, .message--vote:focus .message--vote--down, .message--vote:active .message--vote--down {
+.message:hover .vote--up, .message:focus .vote--up, .message:active .vote--up,
+.message:hover .vote--down, .message:focus .vote--down, .message:active .vote--down {
     visibility: visible;
-}
-
-.message--vote .message--vote--up.dominance, .message--vote .message--vote--up:hover, .message--vote .message--vote--up:focus, .message--vote .message--vote--up:active,
-.message--vote .message--vote--down.dominance, .message--vote .message--vote--down:hover, .message--vote .message--vote--down:focus, .message--vote .message--vote--down:active {
-    opacity: 1;
-    font-weight: bolder;
-    text-shadow: 2px 2px rgba(68, 68, 68, 0.10);
-}
-
-.message--vote .message--vote--up {
-    color: #3b915f
-}
-
-.message--vote .message--vote--down {
-    color: #c0392b
 }

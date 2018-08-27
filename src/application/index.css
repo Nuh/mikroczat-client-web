@@ -71,3 +71,8 @@ a:hover, a:focus, a:active {
 .Resizer.disabled {
     display: none;
 }
+
+.ui-scrollpanel .ui-scrollpanel-content {
+    position: absolute;
+    overflow: scroll;
+}
