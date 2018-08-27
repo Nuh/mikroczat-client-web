@@ -37,7 +37,7 @@ class RoomContent extends Component {
     }
 
     shouldComponentUpdate() {
-        if (!this.autoscroll && this.isScrolledToBottom(true)) {
+        if (!this.autoscroll && this.isScrolledToBottom()) {
             this.autoscroll = true;
         }
         return true;
@@ -78,11 +78,11 @@ class RoomContent extends Component {
         }
     }
 
-    isScrolledToBottom(strict) {
+    isScrolledToBottom() {
         let content = this.getScrollableContentElement();
         if (content) {
             let visibleBottomPosition = content.scrollTop + content.clientHeight;
-            return content.scrollHeight - (strict ? 0 : Math.max(content.clientHeight * 0.10, 50)) <= visibleBottomPosition;
+            return (content.scrollHeight - 50) <= visibleBottomPosition;
         }
     }
 
