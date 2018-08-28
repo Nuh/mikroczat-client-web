@@ -3,6 +3,16 @@
     flex-direction: row;
     align-items: flex-end;
     justify-items: left;
+    transition: background 300ms linear, border-top-width 300ms linear;
+}
+
+.message.unread {
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 2px dashed rgba(255, 255, 255, 0.15);
+}
+
+.message.unread ~ .message.unread {
+    border-top: none;
 }
 
 .message--timestamp, .message--user, .message--message, .message--vote {

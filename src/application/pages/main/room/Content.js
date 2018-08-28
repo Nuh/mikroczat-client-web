@@ -4,9 +4,14 @@ import React, {Component} from 'react';
 import ReactResizeDetector from 'react-resize-detector';
 import {CSSTransitionGroup} from 'react-transition-group';
 import {connect} from "react-redux";
+import {Helmet} from 'react-helmet';
+import IdleTimer from 'react-idle-timer';
 
 import {ScrollPanel} from 'primereact/scrollpanel';
 import 'primereact/components/scrollpanel/ScrollPanel.css';
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faArrowCircleDown} from '@fortawesome/free-solid-svg-icons'
 
 import Loading from '../../../../components/Loading';
 import Vote from '../../../../components/Vote';
@@ -18,7 +23,8 @@ import './Content.css';
 class RoomContent extends Component {
     static contextTypes = {store: PropTypes.object};
     static propTypes = {
-        content: PropTypes.object,
+        content: PropTypes.object.isRequired,
+        profile: PropTypes.object,
         messages: PropTypes.array
     };
 
@@ -59,13 +65,39 @@ class RoomContent extends Component {
         if (target) {
             if (target.scrollTop < this._lastScrollTop) {
                 if (this.autoscroll) {
+                    this.idleTimer && this.idleTimer.pause();
+                    this.lastVisibileMessages = (new Date()).getTime();
                     this.autoscroll = false;
                 }
             } else if (this.isScrolledToBottom()) {
                 this.autoscroll = true;
+                this.lastVisibileMessages = null;
             }
             this._lastScrollTop = target.scrollTop;
         }
+    }
+
+    isUnreadMessage(message) {
+        let {profile} = this.props;
+        if (this.idleTimer && message) {
+            return (profile.type !== message.author.type || profile.username !== message.author.username) && message.created > (this.lastVisibileMessages || this.idleTimer.getLastActiveTime());
+        }
+    }
+
+    hasUnreadMessages() {
+        let {messages} = this.props;
+        if (messages && messages.length && this.idleTimer) {
+            let newestMessage = messages[messages.length - 1];
+            return this.isUnreadMessage(newestMessage);
+        }
+    }
+
+    getUnreadMessages() {
+        let {messages} = this.props;
+        if (messages && messages.length) {
+            return messages.filter((msg) => this.isUnreadMessage(msg)) || [];
+        }
+        return [];
     }
 
     getScrollableContentElement() {
@@ -95,6 +127,7 @@ class RoomContent extends Component {
                 }
             }
         };
+        this.idleTimer && this.idleTimer.resume();
         _scrollToBottom();
         if (timeout) {
             setTimeout(_scrollToBottom, timeout);
@@ -105,6 +138,11 @@ class RoomContent extends Component {
         let {content, messages} = this.props;
         return (
             <div className="room-content">
+                <Helmet>
+                    <title>{`${this.hasUnreadMessages() ? `(${this.getUnreadMessages().length}) ` : ''}#${content.name}`}</title>
+                    <link rel="shortcut icon" type="image/ico"
+                          href={this.hasUnreadMessages() ? "/favicon-unread.ico" : "/favicon.ico"}/>
+                </Helmet>
                 <div id="room-tray" className="room-content--title">
                     {this.props.children && (
                         <span className="room-content--title-options">
@@ -121,14 +159,27 @@ class RoomContent extends Component {
                 <ScrollPanel ref={this.messagesElement} className="room-content--messages">
                     <ReactResizeDetector handleWidth handleHeight skipOnMount refreshMode="debounce" refreshRate={75}
                                          onResize={() => this.scrollToBottom(false, 0)}/>
+                    <IdleTimer element={document} ref={ref => {
+                        this.idleTimer = ref;
+                    }}/>
                     <CSSTransitionGroup transitionEnterTimeout={100} transitionLeaveTimeout={500}
                                         transitionName="animation-hide">
                         {messages && messages.map((msg) =>
-                            <Message key={msg.id} data={msg} onLoad={() => this.scrollToBottom(false, 0)}>
+                            <Message key={msg.id} data={msg} unread={this.isUnreadMessage(msg)}
+                                     onLoad={() => this.scrollToBottom(false, 0)}>
                                 <Vote className="message--vote" message={msg}/>
                             </Message>)}
                     </CSSTransitionGroup>
                 </ScrollPanel>
+                {!this.isScrolledToBottom() && this.hasUnreadMessages() && (
+                    <div className="room-content--scroll-to-bottom" onClick={() => {
+                        this.scrollToBottom(true);
+                        setTimeout(() => this.forceUpdate(), 1000);
+                    }}
+                         title="Scroll to bottom to read a new mesages">
+                        <FontAwesomeIcon icon={faArrowCircleDown}/> New messages
+                    </div>
+                )}
                 <CSSTransitionGroup transitionEnterTimeout={0} transitionLeaveTimeout={500}
                                     transitionName="animation-hide">
                     {!messages.length && (
@@ -145,9 +196,10 @@ class RoomContent extends Component {
     }
 }
 
-const mapState = ({messages}, {content}) => {
+const mapState = ({profile, messages}, {content}) => {
     let {name} = content;
     return {
+        profile,
         messages: (messages[name] || []).slice(-100)
     };
 };

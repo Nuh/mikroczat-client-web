@@ -17,19 +17,20 @@ class Message extends Component {
     static propTypes = {
         className: PropTypes.string,
         data: PropTypes.object.isRequired,
+        unread: PropTypes.bool,
         onLoad: PropTypes.func,
         onLoadError: PropTypes.func
     };
 
-    shouldComponentUpdate() {
-        return false;
+    shouldComponentUpdate(nextProps) {
+        return this.props.unread !== nextProps.unread;
     }
 
     render() {
-        let {children, className, data, onLoad, onLoadError} = this.props;
+        let {children, className, data, unread, onLoad, onLoadError} = this.props;
         let date = moment(data.created);
         return (
-            <div className={`${className || ''} message`}>
+            <div className={`${className || ''} message ${unread ? 'unread' : ''}`}>
                 <div className="message--timestamp" title={date.format("dddd, DD MMMM YYYY, HH:mm:ss")}>
                     {date.format('HH:mm:ss')}
                 </div>

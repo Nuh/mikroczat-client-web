@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import {bindActionCreators} from "redux";
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import {Helmet} from 'react-helmet';
 import SplitPane from 'react-split-pane';
 import {CSSTransitionGroup} from 'react-transition-group';
 
@@ -28,13 +27,6 @@ class Main extends Component {
         return name;
     }
 
-    getTitle() {
-        if (!this.getName()) {
-            return 'Loading...'
-        }
-        return `#${this.getName()}`;
-    }
-
     validate() {
         let {client, myChannels} = this.props;
         let name = this.getName();
@@ -54,9 +46,6 @@ class Main extends Component {
         this.validate();
         return (
             <div>
-                <Helmet>
-                    <title>{this.getTitle()}</title>
-                </Helmet>
                 <TrayElements>
                     <a onClick={e => actions.toggleState(SETTINGS_FIELD_SIDEBAR_VISIBLE, true)}
                        style={{opacity: visible ? 1 : 0.5}}>
