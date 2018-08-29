@@ -20,17 +20,21 @@
     border: 1px solid #5a5b5c;
     border-radius: 3px;
     overflow: hidden;
+    user-select: none;
 }
 
 .user--female .user--avatar {
+    border-bottom: 1px solid #f246d0;
     box-shadow: 0 2px 0 0 #f246d0;
 }
 
 .user--male .user--avatar {
+    border-bottom: 1px solid #46abf2;
     box-shadow: 0 2px 0 0 #46abf2;
 }
 
 .user--bot .user--avatar {
+    border-bottom: 1px solid #000000;
     box-shadow: 0 2px 0 0 #000000;
 }
 

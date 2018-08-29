@@ -1,4 +1,5 @@
 import * as debounce from 'lodash/debounce';
+import * as takeRightWhile from 'lodash/takeRightWhile';
 import PropTypes from "prop-types";
 import React, {Component} from 'react';
 import ReactResizeDetector from 'react-resize-detector';
@@ -94,10 +95,7 @@ class RoomContent extends Component {
 
     getUnreadMessages() {
         let {messages} = this.props;
-        if (messages && messages.length) {
-            return messages.filter((msg) => this.isUnreadMessage(msg)) || [];
-        }
-        return [];
+        return (messages ? takeRightWhile(messages, (msg) => this.isUnreadMessage(msg)) : null) || [];
     }
 
     getScrollableContentElement() {
@@ -136,21 +134,17 @@ class RoomContent extends Component {
 
     render() {
         let {content, messages} = this.props;
-        const getFancyUnreadMessagesTitle = () => {
-            const fancy = ['⓪', '①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩', '⑪', '⑫', '⑬', '⑭', '⑮', '⑯', '⑰', '⑱', '⑲', '⑳'];
+        const getTitle = () => {
             if (this.hasUnreadMessages()) {
                 let num = this.getUnreadMessages().length;
-                if (fancy.length > num) {
-                    return `${fancy[num]} `;
-                }
-                return `(${num}) `;
+                return `(${num}) #${content.name}`;
             }
-            return '';
+            return `#${content.name}`;
         }
         return (
             <div className="room-content">
                 <Helmet defer={false}>
-                    <title>{`${getFancyUnreadMessagesTitle()}#${content.name}`}</title>
+                    <title>{getTitle()}</title>
                     <link rel="shortcut icon" type="image/ico"
                           href={this.hasUnreadMessages() ? "/favicon-unread.ico" : "/favicon.ico"}/>
                 </Helmet>

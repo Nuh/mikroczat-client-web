@@ -3,16 +3,15 @@
     flex-direction: row;
     align-items: flex-end;
     justify-items: left;
-    transition: background 300ms linear, border-top-width 300ms linear;
+    min-height: 42px;
+    border: 0 solid transparent;
+    border-width: 0 2px;
+    transition: background 300ms linear, border-top-width 300ms linear, border-left-color 300ms linear;
 }
 
 .message.unread {
     background: rgba(255, 255, 255, 0.05);
-    border-top: 2px dashed rgba(255, 255, 255, 0.15);
-}
-
-.message.unread ~ .message.unread {
-    border-top: none;
+    border-color: #f38435;
 }
 
 .message--timestamp, .message--user, .message--message, .message--vote {
@@ -27,8 +26,8 @@
     font-size: 0.9em;
 }
 
-.message--timestamp {
-    font-size: 0.75em;
+.message--timestamp, .message--vote {
+    font-size: 0.7em;
 }
 
 .message--message {
@@ -57,12 +56,11 @@
     max-width: 100%;
 }
 
-
 .message .vote--up.empty, .message .vote--down.empty {
-    visibility: hidden;
+    display: none;
 }
 
 .message:hover .vote--up, .message:focus .vote--up, .message:active .vote--up,
 .message:hover .vote--down, .message:focus .vote--down, .message:active .vote--down {
-    visibility: visible;
+    display: block;
 }
