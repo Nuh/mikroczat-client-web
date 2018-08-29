@@ -136,10 +136,21 @@ class RoomContent extends Component {
 
     render() {
         let {content, messages} = this.props;
+        const getFancyUnreadMessagesTitle = () => {
+            const fancy = ['⓪', '①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩', '⑪', '⑫', '⑬', '⑭', '⑮', '⑯', '⑰', '⑱', '⑲', '⑳'];
+            if (this.hasUnreadMessages()) {
+                let num = this.getUnreadMessages().length;
+                if (fancy.length > num) {
+                    return `${fancy[num]} `;
+                }
+                return `(${num}) `;
+            }
+            return '';
+        }
         return (
             <div className="room-content">
-                <Helmet>
-                    <title>{`${this.hasUnreadMessages() ? `(${this.getUnreadMessages().length}) ` : ''}#${content.name}`}</title>
+                <Helmet defer={false}>
+                    <title>{`${getFancyUnreadMessagesTitle()}#${content.name}`}</title>
                     <link rel="shortcut icon" type="image/ico"
                           href={this.hasUnreadMessages() ? "/favicon-unread.ico" : "/favicon.ico"}/>
                 </Helmet>
