@@ -3,6 +3,7 @@
     flex-direction: row;
     align-items: flex-end;
     justify-items: left;
+    width: calc(100% - 4px);
     min-height: 42px;
     border: 0 solid transparent;
     border-width: 0 2px;

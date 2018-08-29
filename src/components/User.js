@@ -11,7 +11,7 @@ const User = ({className, data}) => {
         <div title={data.username}
              className={`${className || ''} user ${data.sex === 'm' ? 'user--male' : data.sex === 'f' ? 'user--female' : data.sex === 'b' ? 'user--bot' : ''}`}>
             <Image className="user--avatar" alt={data.username} src={data.avatar || '/img/no-avatar.png'}
-                   fullSrc={data.fullAvatar || data.avatar || '/img/no-avatar.png'}/>
+                   fullSrc={data.fullAvatar || data.avatar || '/img/no-avatar.png'} downloadable={false}/>
             <div className="user--login">
                 {data.username}
             </div>

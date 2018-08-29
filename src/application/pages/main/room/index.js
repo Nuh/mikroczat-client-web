@@ -4,7 +4,6 @@ import {bindActionCreators} from "redux";
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import SplitPane from 'react-split-pane';
-import {CSSTransitionGroup} from 'react-transition-group';
 
 import * as settingsActions from "../../../actions/settings";
 
@@ -51,14 +50,11 @@ class Room extends Component {
                            }
                        }}
                        onChange={size => localStorage.setItem('splitPos', size)}>
-                <CSSTransitionGroup transitionEnterTimeout={500} transitionLeaveTimeout={500}
-                                    transitionName="test">
-                    {televisionVisible ? (
-                        <Television url={channel.properties.embed}/>
-                    ) : (
-                        <Loading/>
-                    )}
-                </CSSTransitionGroup>
+                {televisionVisible ? (
+                    <Television url={channel.properties.embed}/>
+                ) : (
+                    <Loading/>
+                )}
                 <RoomContent content={channel}>
                     {(channel.properties.embed || televisionVisible) &&
                     <a onClick={e => actions.toggleState(SETTINGS_FIELD_TELEVISION_VISIBLE)}>

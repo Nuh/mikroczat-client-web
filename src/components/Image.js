@@ -1,6 +1,6 @@
 import * as isEqual from 'lodash/isEqual';
 import PropTypes from "prop-types";
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
@@ -16,6 +16,7 @@ class Image extends Component {
         src: PropTypes.string.isRequired,
         fullSrc: PropTypes.string,
         alt: PropTypes.string,
+        downloadable: PropTypes.bool,
         lightbox: PropTypes.bool,
         animation: PropTypes.bool,
         onClick: PropTypes.func,
@@ -35,7 +36,7 @@ class Image extends Component {
     }
 
     render() {
-        let {className, src, fullSrc, alt, lightbox, animation} = this.props;
+        let {className, src, fullSrc, alt, lightbox, downloadable, animation} = this.props;
         let {open} = this.state;
         const _onClick = (...args) => {
                 let [e] = args;
@@ -63,23 +64,28 @@ class Image extends Component {
                 this.success = false;
                 this.setState({open: false});
             };
-        return (
-            <a className={`${className || ''} image ${animation ? 'image--animation' : 'image--static'}`}
-               href={fullSrc || src} target="_blank" title={alt || fullSrc || src} onClick={_onClick}>
+        return React.createElement(downloadable !== false ? 'a' : 'span', {
+            className: `${className || ''} image ${animation ? 'image--animation' : 'image--static'}`,
+            title: alt || fullSrc || src,
+            onClick: _onClick,
+            href: fullSrc || src,
+            target: '_blank'
+        }, (
+            <Fragment>
                 <img src={src || fullSrc} alt={alt || fullSrc || src} referrerPolicy="no-referrer"
                      onLoad={_onLoad} onError={_onLoadError}/>
                 {lightbox !== false && open && (
                     <Lightbox mainSrc={fullSrc || src} enableZoom={true} imageReferrerPolicy="no-referrer"
                               clickOutsideToClose={true} onCloseRequest={() => this.setState({open: false})}
-                              toolbarButtons={[(
+                              toolbarButtons={downloadable === false ? [] : [(
                                   <button className="image--lightbox--external-link" title="Open in a new window"
                                           onClick={e => window.open(fullSrc || src, '_blank')}>
                                       <FontAwesomeIcon icon={faExternalLinkAlt} transform="down-2"/>
                                   </button>
                               )]}/>
                 )}
-            </a>
-        );
+            </Fragment>
+        ));
     }
 }
 
