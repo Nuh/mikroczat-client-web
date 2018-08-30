@@ -1,11 +1,24 @@
 import * as clone from 'lodash/clone';
 import * as find from 'lodash/find';
+import * as sortBy from 'lodash/sortBy';
 import * as remove from 'lodash/remove';
 import {getActionType, getResponseType, SESSION_OPENED} from '../actions/client';
 
+const sortUsers = (users) => sortBy(
+    [...(new Set(users || []))],
+    [user => user.username.toLowerCase()],
+    ['username', 'type']
+);
+
+const sortChannels = (state) => sortBy(
+    [...(new Set(state || []))],
+    [ch => ch.name.toLowerCase()],
+    ['name', 'type']
+);
+
 const refreshChannel = (oldState, channel) => {
     remove(oldState, (ch) => ch === channel);
-    return [...(new Set([...oldState, clone(channel)]))];
+    return sortChannels([...oldState, clone(channel)]);
 };
 
 export default (state = [], data) => {
@@ -19,7 +32,8 @@ export default (state = [], data) => {
 
         case getResponseType('channeljoin'):
             if (data.data) {
-                state = [...(state || []), data.data];
+                data.data.users = sortUsers(data.data.users);
+                state = sortChannels([...(state || []), data.data]);
             }
             return state;
 
@@ -35,7 +49,7 @@ export default (state = [], data) => {
                 let user = data.data.author;
                 let channel = find(state, (ch) => ch && ch.name && ch.name === data.data.data.name);
                 if (channel) {
-                    channel.users = [...(new Set([...(channel.users || []), user]))];
+                    channel.users = sortUsers([...(channel.users || []), user]);
                     return refreshChannel(state, channel);
                 }
             }

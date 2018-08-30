@@ -58,10 +58,10 @@
 }
 
 .message .vote--up.empty, .message .vote--down.empty {
-    display: none;
+    visibility: hidden;
 }
 
 .message:hover .vote--up, .message:focus .vote--up, .message:active .vote--up,
 .message:hover .vote--down, .message:focus .vote--down, .message:active .vote--down {
-    display: block;
+    visibility: visible;
 }

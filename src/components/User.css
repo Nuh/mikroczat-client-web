@@ -3,6 +3,7 @@
     flex-wrap: nowrap;
     box-sizing: border-box;
     width: 100%;
+    min-height: 40px;
     padding: 0.25em 1em 0.25em 0.35em;
     line-height: 32px;
 }
