@@ -72,8 +72,11 @@ class Television extends Component {
                     {changing && (
                         <div className="television--notifaction">
                             Changing to <a href={this.props.url} target="_blank">{this.props.url}</a> in {timeleft ? `${~~timeleft} seconds` : 'a moment'}
-                            <a className="television--cancel-notifaction" onClick={this.cancel.bind(this)}>
+                            <a className="television--notifaction-action" onClick={this.cancel.bind(this)}>
                                 Cancel
+                            </a>
+                            <a className="television--notifaction-action" onClick={() => this.change.bind(this)(this.props.url, true)}>
+                                Change now
                             </a>
                         </div>
                     )}
