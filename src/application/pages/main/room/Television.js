@@ -1,6 +1,6 @@
 import * as isEqual from 'lodash/isEqual';
 import PropTypes from "prop-types";
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {CSSTransitionGroup} from 'react-transition-group';
 
 import './Television.css';
@@ -33,7 +33,7 @@ class Television extends Component {
             setTimeout(() => {
                 let {changing, timeleft} = this.state;
                 if (changing && timeleft > 0) {
-                    this.setState({timeleft: timeleft-1});
+                    this.setState({timeleft: timeleft - 1});
                     count();
                 }
             }, 1000);
@@ -71,12 +71,23 @@ class Television extends Component {
                                     transitionName="animation-hide">
                     {changing && (
                         <div className="television--notifaction">
-                            Changing to <a href={this.props.url} target="_blank">{this.props.url}</a> in {timeleft ? `${~~timeleft} seconds` : 'a moment'}
+                            <Fragment>
+                                {this.props.url ? (
+                                    <Fragment>
+                                        Changing to <a href={this.props.url} target="_blank">{this.props.url}</a>
+                                    </Fragment>
+                                ) : (
+                                    <Fragment>
+                                        Remove
+                                    </Fragment>
+                                )} in {timeleft ? `${~~timeleft} seconds` : 'a moment'}
+                            </Fragment>
                             <a className="television--notifaction-action" onClick={this.cancel.bind(this)}>
                                 Cancel
                             </a>
-                            <a className="television--notifaction-action" onClick={() => this.change.bind(this)(this.props.url, true)}>
-                                Change now
+                            <a className="television--notifaction-action"
+                               onClick={() => this.change.bind(this)(this.props.url, true)}>
+                                {this.props.url ? 'Change now' : 'Remove now'}
                             </a>
                         </div>
                     )}
