@@ -41,3 +41,32 @@ footer .version {
     white-space: nowrap;
     border-left: 1px solid #39393a;
 }
+
+footer .version--client, footer .version-server {
+    font-weight: bolder;
+}
+
+footer .api-version-mismatch-message {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 0.25em;
+    border-top: 2px solid #f38435;
+    background: #ce6d34;
+    opacity: 0.9;
+    text-align: center;
+    font-size: 1.5em;
+    line-height: 2em;
+    overflow: hidden;
+    z-index: 10000;
+}
+footer .api-version-mismatch-message--icon {
+    margin-right: 0.5em;
+    font-size: 1.25em;
+}
+
+footer .api-version-mismatch-message--action {
+    margin-left: 1em;
+    font-weight: bolder;
+}

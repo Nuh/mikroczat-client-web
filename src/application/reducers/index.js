@@ -17,7 +17,7 @@ const persistConfig = {
     key: 'storage',
     storage,
     version: 0,
-    whitelist: ['settings', 'server'],
+    whitelist: ['settings'],
     throttle: 1000
 };
 
