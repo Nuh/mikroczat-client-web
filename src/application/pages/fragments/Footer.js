@@ -52,14 +52,9 @@ class Footer extends Component {
                         <span>Loading...</span>
                     )}
                     <div className="version">
-                        Version:
                         <span className="version--client"
                               title="Client version">{REACT_APP_VERSION || 'DEVELOPMENT'}</span>
-                        {version && (
-                            <Fragment>
-                                /<span className="version--server" title="Server version">{version}</span>
-                            </Fragment>
-                        )}
+                        {version && (<span className="version--server" title="Server version">{version}</span>)}
                     </div>
                 </footer>
             </Fragment>
