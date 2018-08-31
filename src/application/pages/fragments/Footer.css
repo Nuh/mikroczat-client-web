@@ -42,10 +42,6 @@ footer .version {
     border-left: 1px solid #39393a;
 }
 
-footer .version--client, footer .version-server {
-    font-weight: bolder;
-}
-
 footer .api-version-mismatch-message {
     position: fixed;
     right: 0;

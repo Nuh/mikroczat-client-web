@@ -137,7 +137,7 @@ class RoomContent extends Component {
         const getTitle = () => {
             if (this.hasUnreadMessages()) {
                 let num = this.getUnreadMessages().length;
-                return `(${num}) #${content.name}`;
+                return `(${num >= 100 ? '99+' : num}) #${content.name}`;
             }
             return `#${content.name}`;
         }

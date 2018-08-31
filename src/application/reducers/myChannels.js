@@ -10,11 +10,27 @@ const sortUsers = (users) => sortBy(
     ['username', 'type']
 );
 
+const sortChannelUsers = (channel) => {
+    if (channel) {
+        let users = sortUsers(channel.users);
+        return {...channel, users};
+    }
+    return channel;
+}
+
 const sortChannels = (state) => sortBy(
     [...(new Set(state || []))],
     [ch => ch.name.toLowerCase()],
     ['name', 'type']
 );
+
+
+const removeChannel = (state, name, type) => {
+    if (state && name) {
+        remove(state, (ch) => ch && (!type || (ch.type && ch.type === type)) && ch.name && ch.name === name)
+    }
+    return state || [];
+}
 
 const refreshChannel = (oldState, channel) => {
     remove(oldState, (ch) => ch === channel);
@@ -23,26 +39,32 @@ const refreshChannel = (oldState, channel) => {
 
 export default (state = [], data) => {
     switch (data.type) {
-        case SESSION_OPENED:
+        case SESSION_OPENED: {
             data.client.fetch('mychannels');
             return state;
+        }
 
-        case getResponseType('mychannels'):
-            return state = data.data || [];
 
-        case getResponseType('channeljoin'):
+        case getResponseType('mychannels'): {
+            return sortChannels(data.data || []);
+        }
+
+        case getResponseType('channeljoin'): {
             if (data.data) {
-                data.data.users = sortUsers(data.data.users);
-                state = sortChannels([...(state || []), data.data]);
+                let channel = data.data;
+                return sortChannels([...removeChannel(state, channel.name, channel.type), sortChannelUsers(channel)]);
             }
             return state;
+        }
 
-        case getResponseType('channelleave'):
+        case getResponseType('channelleave'): {
             if (state && data.data) {
                 let channel = data.data;
-                remove(state, (ch) => ch && ch.type && ch.type === channel.type && ch.name && ch.name === channel.name)
+                return removeChannel(state, channel.name, channel.type);
             }
             return state;
+        }
+
 
         case getActionType('channeljoin'):
             if (data.data && data.data.author) {
