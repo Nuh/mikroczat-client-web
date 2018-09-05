@@ -69,7 +69,7 @@ export default (state = [], data) => {
         case getActionType('channeljoin'):
             if (data.data && data.data.author) {
                 let user = data.data.author;
-                let channel = find(state, (ch) => ch && ch.name && ch.name === data.data.data.name);
+                let channel = find(state, (ch) => ch && ch.name && ch.name === data.data.data.channel.name);
                 if (channel) {
                     channel.users = sortUsers([...(channel.users || []), user]);
                     return refreshChannel(state, channel);
@@ -80,7 +80,7 @@ export default (state = [], data) => {
         case getActionType('channelleave'):
             if (data.data && data.data.author) {
                 let user = data.data.author;
-                let channel = find(state, (ch) => ch && ch.name && ch.name === data.data.data.name);
+                let channel = find(state, (ch) => ch && ch.name && ch.name === data.data.data.channel.name);
                 if (channel && channel.users) {
                     if (remove(channel.users, (u) => u && u.type && u.type === user.type && u.username && u.username === user.username)) {
                         return refreshChannel(state, channel);

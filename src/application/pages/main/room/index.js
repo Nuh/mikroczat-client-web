@@ -1,4 +1,5 @@
 import * as find from "lodash/find";
+import * as size from "lodash/size";
 import PropTypes from "prop-types";
 import {bindActionCreators} from "redux";
 import React, {Component} from 'react';
@@ -56,7 +57,7 @@ class Room extends Component {
                     <Loading/>
                 )}
                 <RoomContent content={channel}>
-                    {(channel.properties.embed || televisionVisible) &&
+                    {(size(channel.properties.embed) || televisionVisible) &&
                     <a onClick={e => actions.toggleState(SETTINGS_FIELD_TELEVISION_VISIBLE)}>
                         <FontAwesomeIcon icon={televisionVisible ? faVideoSlash : faVideo}
                                          transform="shrink-3 left-3 down-1"/>

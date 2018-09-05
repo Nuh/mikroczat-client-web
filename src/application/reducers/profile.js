@@ -1,10 +1,10 @@
 import {sessionService} from 'redux-react-session';
-import client, {SESSION_OPENED, SESSION_CLOSED, getResponseType} from '../actions/client';
+import {SESSION_OPENED, SESSION_CLOSED, getResponseType} from '../actions/client';
 
 export default (state = null, data) => {
     switch (data.type) {
         case SESSION_OPENED:
-            client.fetch('whoiam');
+            data.client.fetch('whoiam');
             sessionService.deleteUser();
             return state;
 

@@ -1,4 +1,6 @@
+import * as size from 'lodash/size';
 import * as isEqual from 'lodash/isEqual';
+import * as castArray from 'lodash/castArray';
 import PropTypes from "prop-types";
 import React, {Component, Fragment} from 'react';
 import {CSSTransitionGroup} from 'react-transition-group';
@@ -7,16 +9,16 @@ import './Television.css';
 
 class Television extends Component {
     static propTypes = {
-        url: PropTypes.string,
+        url: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
         timeleft: PropTypes.number
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            url: props.url,
+            url: castArray(props.url),
             changing: null,
-            timeleft: 10
+            timeleft: 0
         };
     }
 
@@ -30,23 +32,25 @@ class Television extends Component {
 
     change(url, force) {
         const count = () => {
+            const stepInterval = 1;
             setTimeout(() => {
                 let {changing, timeleft} = this.state;
                 if (changing && timeleft > 0) {
-                    this.setState({timeleft: timeleft - 1});
+                    this.setState({timeleft: Math.max(0, timeleft - stepInterval)});
                     count();
                 }
-            }, 1000);
+            }, stepInterval * 1000);
         };
 
-        if (force || !this.state.url) {
+        let timeleft = this.props.timeleft || 10;
+        if (force || !size(this.state.url) || timeleft <= 0) {
             this.cancel();
-            setTimeout(this.setState({url}), 0);
+            setTimeout(this.setState({url: castArray(url)}), 0);
             return true;
         } else if ([this.props.url, this.state.url].indexOf(url) === -1) {
             this.cancel();
             setTimeout(() => {
-                this.setState({timeleft: 10, changing: setTimeout(() => this.change(url, true), 10000)});
+                this.setState({timeleft, changing: setTimeout(() => this.change(url, true), timeleft * 1000)});
                 count();
             }, 0);
             return true;
@@ -57,8 +61,7 @@ class Television extends Component {
     cancel() {
         let {changing} = this.state;
         if (changing) {
-            clearTimeout(changing);
-            this.setState({timeleft: 0, changing: null});
+            this.setState({timeleft: 0, changing: clearTimeout(changing)});
         }
     }
 
@@ -72,27 +75,18 @@ class Television extends Component {
                     {changing && (
                         <div className="television--notifaction">
                             <Fragment>
-                                {this.props.url ? (
-                                    <Fragment>
-                                        Changing to <a href={this.props.url} target="_blank">{this.props.url}</a>
-                                    </Fragment>
-                                ) : (
-                                    <Fragment>
-                                        Remove
-                                    </Fragment>
-                                )} in {timeleft ? `${~~timeleft} seconds` : 'a moment'}
+                                {url ? (<Fragment>Change</Fragment>) : (<Fragment>Remove</Fragment>)} in
+                                {timeleft ? `${~~timeleft} seconds` : 'a moment'}
                             </Fragment>
-                            <a className="television--notifaction-action" onClick={this.cancel.bind(this)}>
-                                Cancel
-                            </a>
+                            <a className="television--notifaction-action" onClick={this.cancel.bind(this)}>Cancel</a>
                             <a className="television--notifaction-action"
-                               onClick={() => this.change.bind(this)(this.props.url, true)}>
-                                {this.props.url ? 'Change now' : 'Remove now'}
+                               onClick={() => this.change.bind(this)(url, true)}>
+                                {size(url) ? 'Change now' : 'Remove now'}
                             </a>
                         </div>
                     )}
                 </CSSTransitionGroup>
-                {!url ? 'Empty... :(' : (
+                {!size(url) ? 'Empty... :(' : (
                     <iframe title="Embedded content" src={url} allow="autoplay; encrypted-media" allowFullScreen
                             sandbox="allow-same-origin allow-scripts"/>
                 )}

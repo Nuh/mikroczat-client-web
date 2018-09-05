@@ -99,9 +99,9 @@ class ApplicationClient extends Client {
             return this;
         }
         if (this.channelName) {
-            this.fetch('channelleave', {name: this.channelName});
+            this.fetch('channelleave', {channel: this.channelName});
         }
-        this.fetch('channeljoin', {name: this.channelName = name});
+        this.fetch('channeljoin', {channel: this.channelName = name});
         this.channels = [...(new Set([...(this.channels || []), name]))];
         return this;
     }

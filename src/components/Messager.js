@@ -48,6 +48,32 @@ class Messager extends Component {
                             message: args.join(' ').trim()
                         });
 
+                    case '/kick': {
+                        let [user, ...reason] = args;
+                        return client.send('channelkick', {
+                            channel: channel.name,
+                            user,
+                            reason: reason.join(' ').trim()
+                        });
+                    }
+
+                    case '/ban': {
+                        let [user, ...reason] = args;
+                        return client.send('channelban', {
+                            channel: channel.name,
+                            user,
+                            reason: reason.join(' ').trim()
+                        });
+                    }
+
+                    case '/unban': {
+                        let [user] = args;
+                        return client.send('channelunban', {
+                            channel: channel.name,
+                            user
+                        });
+                    }
+
                     default:
                         console.error('Unknown command')
                 }
@@ -55,7 +81,8 @@ class Messager extends Component {
                 client.send('channelaction', {
                     channel: channel.name,
                     type: 'message',
-                    message: message.trim()});
+                    message: message.trim()
+                });
             }
         }
     }
